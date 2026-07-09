@@ -39,11 +39,13 @@ public with sharing class GenerateVisitRankingsAction {
                 // Step 4: Parse the JSON response
                 AssessmentResult assessment = parsePromptResponse(promptResponse);
 
-                // Step 5: Validate and enforce exception rules
-                validateExceptionRules(assessment);
-
-                // Step 6: Update the Visit record
+                // Step 5: Update the Visit record with parsed data
                 updateVisitRecord(visitRecord, assessment);
+
+                // Step 6: Apply hard-coded exception safety net
+                visitRecord = applyHardCodedExceptionSafetyNet(visitRecord);
+
+                // Step 7: Save to database
                 update visitRecord;
 
                 // Step 7: Build success result
@@ -210,40 +212,36 @@ public with sharing class GenerateVisitRankingsAction {
     }
 
     /**
-     * @description Validate and enforce exception rules based on hours
-     * @param assessment The parsed assessment result
+     * @description Apply hard-coded exception safety net to ensure exception flags are set correctly
+     * @param visitRecord The Visit record to validate
+     * @return Visit record with corrected exception flags
      */
-    private static void validateExceptionRules(AssessmentResult assessment) {
-        // Meal Preparation: < 3.01 OR > 7.00
-        if (assessment.Meal_Preparation_Proposed_Hours != null) {
-            Boolean isException = false;
-            if (assessment.Meal_Preparation_Proposed_Hours < 3.01) {
-                isException = true;
-            } else if (assessment.Meal_Preparation_Proposed_Hours > 7.00) {
-                isException = true;
+    private static Visit applyHardCodedExceptionSafetyNet(Visit visitRecord) {
+        // 1. Meal Preparation Math Check (Weekly)
+        if (visitRecord.Meal_Preparation_Proposed_Hours__c != null) {
+            Decimal mealHours = visitRecord.Meal_Preparation_Proposed_Hours__c;
+            if (mealHours < 3.01 || mealHours > 7.00) {
+                visitRecord.Meal_Preparation_Is_Exception__c = true;
             }
-            // Override AI output if needed
-            assessment.Meal_Preparation_Is_Exception = isException;
         }
 
-        // Ambulation: < 1.00 OR > 2.10
-        if (assessment.Ambulation_Proposed_Hours != null) {
-            Boolean isException = false;
-            if (assessment.Ambulation_Proposed_Hours < 1.00) {
-                isException = true;
-            } else if (assessment.Ambulation_Proposed_Hours > 2.10) {
-                isException = true;
+        // 2. Ambulation Math Check (Weekly)
+        if (visitRecord.Ambulation_Proposed_Hours__c != null) {
+            Decimal ambHours = visitRecord.Ambulation_Proposed_Hours__c;
+            if (ambHours < 1.00 || ambHours > 2.10) {
+                visitRecord.Ambulation_Is_Exception__c = true;
             }
-            // Override AI output if needed
-            assessment.Ambulation_Is_Exception = isException;
         }
 
-        // Domestic Services: > 6.00 only
-        if (assessment.Domestic_Services_Proposed_Hours != null) {
-            Boolean isException = assessment.Domestic_Services_Proposed_Hours > 6.00;
-            // Override AI output if needed
-            assessment.Domestic_Services_Is_Exception = isException;
+        // 3. Domestic Services Math Check (Monthly)
+        if (visitRecord.Domestic_Services_Proposed_Hours__c != null) {
+            Decimal domHours = visitRecord.Domestic_Services_Proposed_Hours__c;
+            if (domHours > 6.00) {
+                visitRecord.Domestic_Services_Is_Exception__c = true;
+            }
         }
+
+        return visitRecord;
     }
 
     /**
