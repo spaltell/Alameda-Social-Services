@@ -42,16 +42,16 @@ public with sharing class GenerateVisitRankingsAction {
                 // Step 5: Update the Visit record with parsed data
                 updateVisitRecord(visitRecord, assessment);
 
-                // Step 6: Apply hard-coded exception safety net
-                visitRecord = applyHardCodedExceptionSafetyNet(visitRecord);
+                // Step 6: Calculate exception flags based on hours (separation of concerns)
+                visitRecord = calculateExceptionsByCode(visitRecord);
 
                 // Step 7: Save to database
                 update visitRecord;
 
-                // Step 7: Build success result
+                // Step 8: Build success result
                 result.success = true;
                 result.message = 'Rankings and justifications generated successfully.';
-                result.exceptionsDetected = buildExceptionSummary(assessment);
+                result.exceptionsDetected = buildExceptionSummary(visitRecord);
 
             } catch (Exception e) {
                 result.success = false;
@@ -212,40 +212,33 @@ public with sharing class GenerateVisitRankingsAction {
     }
 
     /**
-     * @description Apply hard-coded exception safety net to ensure exception flags are set correctly
-     * @param visitRecord The Visit record to validate
-     * @return Visit record with corrected exception flags
+     * @description Calculate exception flags based on hours bounds (separation of concerns)
+     * AI focuses on ranking/hours/justifications, Apex handles mathematical exception logic
+     * @param v The Visit record to evaluate
+     * @return Visit record with calculated exception flags
      */
-    private static Visit applyHardCodedExceptionSafetyNet(Visit visitRecord) {
-        // 1. Meal Preparation Math Check (Weekly)
-        if (visitRecord.Meal_Preparation_Proposed_Hours__c != null) {
-            Decimal mealHours = visitRecord.Meal_Preparation_Proposed_Hours__c;
-            if (mealHours < 3.01 || mealHours > 7.00) {
-                visitRecord.Meal_Preparation_Is_Exception__c = true;
-            }
+    public static Visit calculateExceptionsByCode(Visit v) {
+        // Check Meal Prep Bounds (Standard is 3.01 to 7.00)
+        if (v.Meal_Preparation_Proposed_Hours__c != null) {
+            v.Meal_Preparation_Is_Exception__c = (v.Meal_Preparation_Proposed_Hours__c < 3.01 || v.Meal_Preparation_Proposed_Hours__c > 7.00);
         }
 
-        // 2. Ambulation Math Check (Weekly)
-        if (visitRecord.Ambulation_Proposed_Hours__c != null) {
-            Decimal ambHours = visitRecord.Ambulation_Proposed_Hours__c;
-            if (ambHours < 1.00 || ambHours > 2.10) {
-                visitRecord.Ambulation_Is_Exception__c = true;
-            }
+        // Check Ambulation Bounds (Standard is 1.00 to 2.10)
+        if (v.Ambulation_Proposed_Hours__c != null) {
+            v.Ambulation_Is_Exception__c = (v.Ambulation_Proposed_Hours__c < 1.00 || v.Ambulation_Proposed_Hours__c > 2.10);
         }
 
-        // 3. Domestic Services Math Check (Monthly)
-        if (visitRecord.Domestic_Services_Proposed_Hours__c != null) {
-            Decimal domHours = visitRecord.Domestic_Services_Proposed_Hours__c;
-            if (domHours > 6.00) {
-                visitRecord.Domestic_Services_Is_Exception__c = true;
-            }
+        // Check Domestic Services Bounds (Standard max is 6.00)
+        if (v.Domestic_Services_Proposed_Hours__c != null) {
+            v.Domestic_Services_Is_Exception__c = (v.Domestic_Services_Proposed_Hours__c > 6.00);
         }
 
-        return visitRecord;
+        return v;
     }
 
     /**
-     * @description Update Visit record with assessment data
+     * @description Update Visit record with assessment data from AI
+     * AI provides rankings, hours, and justifications - exception flags calculated separately
      * @param visitRecord The Visit record to update
      * @param assessment The parsed assessment data
      */
@@ -261,32 +254,29 @@ public with sharing class GenerateVisitRankingsAction {
         visitRecord.Ambulation_Proposed_Hours__c = assessment.Ambulation_Proposed_Hours;
         visitRecord.Domestic_Services_Proposed_Hours__c = assessment.Domestic_Services_Proposed_Hours;
 
-        // Exception flags
-        visitRecord.Meal_Preparation_Is_Exception__c = assessment.Meal_Preparation_Is_Exception;
-        visitRecord.Ambulation_Is_Exception__c = assessment.Ambulation_Is_Exception;
-        visitRecord.Domestic_Services_Is_Exception__c = assessment.Domestic_Services_Is_Exception;
-
         // Justifications
         visitRecord.Meal_Preparation_Justification__c = assessment.Meal_Preparation_Justification;
         visitRecord.Ambulation_Justification__c = assessment.Ambulation_Justification;
         visitRecord.Domestic_Services_Justification__c = assessment.Domestic_Services_Justification;
+
+        // Note: Exception flags are calculated by calculateExceptionsByCode() after this method
     }
 
     /**
-     * @description Build exception summary message
-     * @param assessment The parsed assessment data
+     * @description Build exception summary message from Visit record
+     * @param visitRecord The Visit record with calculated exception flags
      * @return Summary of which categories have exceptions
      */
-    private static String buildExceptionSummary(AssessmentResult assessment) {
+    private static String buildExceptionSummary(Visit visitRecord) {
         List<String> exceptions = new List<String>();
 
-        if (assessment.Meal_Preparation_Is_Exception == true) {
+        if (visitRecord.Meal_Preparation_Is_Exception__c == true) {
             exceptions.add('Meal Preparation');
         }
-        if (assessment.Ambulation_Is_Exception == true) {
+        if (visitRecord.Ambulation_Is_Exception__c == true) {
             exceptions.add('Ambulation');
         }
-        if (assessment.Domestic_Services_Is_Exception == true) {
+        if (visitRecord.Domestic_Services_Is_Exception__c == true) {
             exceptions.add('Domestic Services');
         }
 
@@ -299,22 +289,20 @@ public with sharing class GenerateVisitRankingsAction {
 
     /**
      * Wrapper class matching the prompt template's JSON structure
-     * Note: Property names must match JSON keys exactly (with double underscores)
+     * AI outputs rankings, hours, and justifications - Apex calculates exception flags
+     * Assumes JSON keys do NOT have __c suffix
      */
     public class AssessmentResult {
         public String Meal_Preparation_Proposed_Ranking { get; set; }
         public Decimal Meal_Preparation_Proposed_Hours { get; set; }
-        public Boolean Meal_Preparation_Is_Exception { get; set; }
         public String Meal_Preparation_Justification { get; set; }
 
         public String Ambulation_Proposed_Ranking { get; set; }
         public Decimal Ambulation_Proposed_Hours { get; set; }
-        public Boolean Ambulation_Is_Exception { get; set; }
         public String Ambulation_Justification { get; set; }
 
         public String Domestic_Services_Proposed_Ranking { get; set; }
         public Decimal Domestic_Services_Proposed_Hours { get; set; }
-        public Boolean Domestic_Services_Is_Exception { get; set; }
         public String Domestic_Services_Justification { get; set; }
 
         public String Orientation_Proposed_Ranking { get; set; }
