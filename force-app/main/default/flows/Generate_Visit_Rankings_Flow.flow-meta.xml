@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <description>Invokes the Generate Visit Rankings and Justifications Apex Action</description>
+    <interviewLabel>Generate Visit Rankings Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Generate Visit Rankings Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Generate_Rankings</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <actionCalls>
+        <name>Generate_Rankings</name>
+        <label>Generate Rankings</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <actionName>GenerateVisitRankingsAction</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>visitId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <connector>
+            <targetReference>Check_For_Exceptions</targetReference>
+        </connector>
+    </actionCalls>
+    <decisions>
+        <name>Check_For_Exceptions</name>
+        <label>Check For Exceptions</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <defaultConnector>
+            <targetReference>Success_Screen</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Exceptions</defaultConnectorLabel>
+        <rules>
+            <name>Has_Exceptions</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Generate_Rankings.exceptionsDetected</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>None</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Exception_Warning_Screen</targetReference>
+            </connector>
+            <label>Has Exceptions</label>
+        </rules>
+    </decisions>
+    <screens>
+        <name>Exception_Warning_Screen</name>
+        <label>Exceptions Detected</label>
+        <locationX>50</locationX>
+        <locationY>350</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ExceptionWarning</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(194, 57, 52); font-size: 14px;&quot;&gt;⚠️ Exceptions Detected&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;The following categories have hours outside state-mandated ranges:&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;{!Generate_Rankings.exceptionsDetected}&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Please review the proposed rankings, hours, and justifications. You may need to approve or override these values before submitting.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Success_Screen</name>
+        <label>Success</label>
+        <locationX>302</locationX>
+        <locationY>350</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>SuccessMessage</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(8, 107, 45); font-size: 14px;&quot;&gt;✓ Rankings Generated&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Preliminary rankings, hours, and justifications have been assigned. Review the proposed values below and approve or override as needed.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

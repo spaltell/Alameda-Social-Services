@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_Weather_Data</name>
+        <label>Set Weather Data</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>JSONWeatherData</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>WeatherTemplate</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Returns the historical weather data for the supplied account id.</description>
+    <environments>Default</environments>
+    <interviewLabel>Get Weather For Account {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Historical Weather Data for Account</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Weather_Data</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>WeatherTemplate</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>[
+   {
+      &quot;Month&quot;:&quot;Jan2022&quot;,
+      &quot;Actual Avg&quot;:32,
+      &quot;Historical Avg&quot;:32
+   },
+   {
+      &quot;Month&quot;:&quot;Feb2022&quot;,
+      &quot;Actual Avg&quot;:35,
+      &quot;Historical Avg&quot;:35
+   },
+   {
+      &quot;Month&quot;:&quot;Mar2022&quot;,
+      &quot;Actual Avg&quot;:42,
+      &quot;Historical Avg&quot;:42
+   },
+   {
+      &quot;Month&quot;:&quot;Apr2022&quot;,
+      &quot;Actual Avg&quot;:55,
+      &quot;Historical Avg&quot;:55
+   },
+   {
+      &quot;Month&quot;:&quot;May2022&quot;,
+      &quot;Actual Avg&quot;:65,
+      &quot;Historical Avg&quot;:65
+   },
+   {
+      &quot;Month&quot;:&quot;Jun2022&quot;,
+      &quot;Actual Avg&quot;:75,
+      &quot;Historical Avg&quot;:75
+   },
+   {
+      &quot;Month&quot;:&quot;Jul2022&quot;,
+      &quot;Actual Avg&quot;:80,
+      &quot;Historical Avg&quot;:80
+   },
+   {
+      &quot;Month&quot;:&quot;Aug2022&quot;,
+      &quot;Actual Avg&quot;:79,
+      &quot;Historical Avg&quot;:79
+   },
+   {
+      &quot;Month&quot;:&quot;Sep2022&quot;,
+      &quot;Actual Avg&quot;:71,
+      &quot;Historical Avg&quot;:71
+   },
+   {
+      &quot;Month&quot;:&quot;Oct2022&quot;,
+      &quot;Actual Avg&quot;:60,
+      &quot;Historical Avg&quot;:60
+   },
+   {
+      &quot;Month&quot;:&quot;Nov2022&quot;,
+      &quot;Actual Avg&quot;:50,
+      &quot;Historical Avg&quot;:50
+   },
+   {
+      &quot;Month&quot;:&quot;Dec2022&quot;,
+      &quot;Actual Avg&quot;:40,
+      &quot;Historical Avg&quot;:40
+   },
+   {
+      &quot;Month&quot;:&quot;Jan2023&quot;,
+      &quot;Actual Avg&quot;:32,
+      &quot;Historical Avg&quot;:32
+   },
+   {
+      &quot;Month&quot;:&quot;Feb2023&quot;,
+      &quot;Actual Avg&quot;:35,
+      &quot;Historical Avg&quot;:35
+   },
+   {
+      &quot;Month&quot;:&quot;Mar2023&quot;,
+      &quot;Actual Avg&quot;:42,
+      &quot;Historical Avg&quot;:42
+   },
+   {
+      &quot;Month&quot;:&quot;Apr2023&quot;,
+      &quot;Actual Avg&quot;:55,
+      &quot;Historical Avg&quot;:55
+   },
+   {
+      &quot;Month&quot;:&quot;May2023&quot;,
+      &quot;Actual Avg&quot;:65,
+      &quot;Historical Avg&quot;:65
+   },
+   {
+      &quot;Month&quot;:&quot;Jun2023&quot;,
+      &quot;Actual Avg&quot;:75,
+      &quot;Historical Avg&quot;:75
+   },
+   {
+      &quot;Month&quot;:&quot;Jul2023&quot;,
+      &quot;Actual Avg&quot;:80,
+      &quot;Historical Avg&quot;:80
+   },
+   {
+      &quot;Month&quot;:&quot;Aug2023&quot;,
+      &quot;Actual Avg&quot;:79,
+      &quot;Historical Avg&quot;:79
+   },
+   {
+      &quot;Month&quot;:&quot;Sep2023&quot;,
+      &quot;Actual Avg&quot;:71,
+      &quot;Historical Avg&quot;:71
+   },
+   {
+      &quot;Month&quot;:&quot;Oct2023&quot;,
+      &quot;Actual Avg&quot;:60,
+      &quot;Historical Avg&quot;:60
+   },
+   {
+      &quot;Month&quot;:&quot;Nov2023&quot;,
+      &quot;Actual Avg&quot;:50,
+      &quot;Historical Avg&quot;:50
+   },
+   {
+      &quot;Month&quot;:&quot;Dec2023&quot;,
+      &quot;Actual Avg&quot;:40,
+      &quot;Historical Avg&quot;:40
+   },
+   {
+      &quot;Month&quot;:&quot;Jan2024&quot;,
+      &quot;Actual Avg&quot;:32,
+      &quot;Historical Avg&quot;:32
+   },
+   {
+      &quot;Month&quot;:&quot;Feb2024&quot;,
+      &quot;Actual Avg&quot;:35,
+      &quot;Historical Avg&quot;:35
+   },
+   {
+      &quot;Month&quot;:&quot;Mar2024&quot;,
+      &quot;Actual Avg&quot;:42,
+      &quot;Historical Avg&quot;:42
+   },
+   {
+      &quot;Month&quot;:&quot;Apr2024&quot;,
+      &quot;Actual Avg&quot;:55,
+      &quot;Historical Avg&quot;:55
+   },
+   {
+      &quot;Month&quot;:&quot;May2024&quot;,
+      &quot;Actual Avg&quot;:65,
+      &quot;Historical Avg&quot;:65
+   },
+   {
+      &quot;Month&quot;:&quot;Jun2024&quot;,
+      &quot;Actual Avg&quot;:75,
+      &quot;Historical Avg&quot;:75
+   },
+   {
+      &quot;Month&quot;:&quot;Jul2024&quot;,
+      &quot;Actual Avg&quot;:94,
+      &quot;Historical Avg&quot;:80
+   },
+   {
+      &quot;Month&quot;:&quot;Aug2024&quot;,
+      &quot;Actual Avg&quot;:79,
+      &quot;Historical Avg&quot;:79
+   },
+   {
+      &quot;Month&quot;:&quot;Sep2024&quot;,
+      &quot;Actual Avg&quot;:71,
+      &quot;Historical Avg&quot;:71
+   },
+   {
+      &quot;Month&quot;:&quot;Oct2024&quot;,
+      &quot;Actual Avg&quot;:60,
+      &quot;Historical Avg&quot;:60
+   },
+   {
+      &quot;Month&quot;:&quot;Nov2024&quot;,
+      &quot;Actual Avg&quot;:50,
+      &quot;Historical Avg&quot;:50
+   },
+   {
+      &quot;Month&quot;:&quot;Dec2024&quot;,
+      &quot;Actual Avg&quot;:40,
+      &quot;Historical Avg&quot;:40
+   }
+]</text>
+    </textTemplates>
+    <variables>
+        <description>The record Id of the account to query for weather data</description>
+        <name>AccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Weather data for the specified account in JSON format</description>
+        <name>JSONWeatherData</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Account_Billing_Address</name>
+        <label>Assign Account Billing Address</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>Address_To_Confirm</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Formatted_Address</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Once you receive the contactId and before creating a service appointment, show the address to the user and get their confirmation that this is the right address for the service appointment.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Formatted_Address</name>
+        <dataType>String</dataType>
+        <expression>{!Get_Account.BillingStreet} + &quot;, &quot; + 
+{!Get_Account.BillingCity} + &quot;, &quot; + 
+{!Get_Account.BillingPostalCode} + &quot;, &quot; + 
+{!Get_Account.BillingState} + &quot;, &quot; + 
+{!Get_Account.BillingCountry}</expression>
+    </formulas>
+    <interviewLabel>AB Optimization AB Show Address For Confirmation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ASA Optimization AB Show Address For Confirmation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Account</name>
+        <label>Get Account</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_Account_Billing_Address</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Contact.AccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Contact</name>
+        <label>Get Contact</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Account</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ContactID</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Contact</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Confirm the address with the user</description>
+        <name>Address_To_Confirm</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <description>This is the contact ID of the retrieved contact</description>
+        <name>ContactID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

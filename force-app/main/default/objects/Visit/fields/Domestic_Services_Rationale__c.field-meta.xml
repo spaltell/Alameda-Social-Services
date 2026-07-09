@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Domestic_Services_Rationale__c</fullName>
+    <description>Plain-language explanation for Domestic Services ranking</description>
+    <inlineHelpText>AI-generated explanation of why this ranking was assigned.</inlineHelpText>
+    <label>Domestic Services - Rationale</label>
+    <length>32000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

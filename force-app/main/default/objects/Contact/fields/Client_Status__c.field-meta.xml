@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Client_Status__c</fullName>
+    <description>Current status of the client in the IHSS program</description>
+    <inlineHelpText>Select the client's current status in the In-Home Support Services program.</inlineHelpText>
+    <label>Client Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Pending Assessment</fullName>
+                <default>false</default>
+                <label>Pending Assessment</label>
+            </value>
+            <value>
+                <fullName>Re-assessment Due</fullName>
+                <default>false</default>
+                <label>Re-assessment Due</label>
+            </value>
+            <value>
+                <fullName>Inactive</fullName>
+                <default>false</default>
+                <label>Inactive</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

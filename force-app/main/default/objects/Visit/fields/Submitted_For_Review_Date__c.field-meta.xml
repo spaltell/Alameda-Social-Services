@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Submitted_For_Review_Date__c</fullName>
+    <description>Date and time when the assessment was submitted for review</description>
+    <inlineHelpText>Automatically populated when the worker submits the assessment.</inlineHelpText>
+    <label>Submitted for Review Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

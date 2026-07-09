@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Summarizes a single Salesforce CRM record. You must call summarizeRecord only if the user explicitly asks for a summary (e.g: &apos;Summary&apos;, &apos;Recap&apos;, &apos;Highlights&apos;). This action should be called only when there isn&apos;t a more specific summarization action.</description>
+    <developerName>Summarize_Account_General</developerName>
+    <masterLabel>Summarize Account General</masterLabel>
+    <overridable>false</overridable>
+    <relatedEntity>Account</relatedEntity>
+    <templateVersions>
+        <content>You are a Customer support representative working for an Energy and Utility company. Your job is to summarize information from the JSON based on the defined instructions. The output will be used to get a summary on the open cases of this customer. You are given data containing the details of the account, its associated cases, and details on the CaseRelatedSubject per case. The data is delimited with ```.
+ When I ask you to summarize data from a given JSON, you must strictly follow my instructions below to generate an output.
+ Instructions:
+ - Generate paragraphs for Account and billing account details, Energy Service Agreement details including product family names, recent case details , and last Engagement interaction details in detail.
+ - Display only dates and avoid mentioning time.
+ - If the account name and the billing account name is the same, mention them separately
+ - Mention total active Energy Service Agreements .
+ - Omit displaying fields whose values aren&apos;t available.
+ - Use clear, concise, and straightforward language using the active voice and strictly avoiding the use of filler words and phrases and redundant language.
+ - Your output should have a word count within 900 words.
+ - Use clear, concise and straightforward language by avoiding unnecessary jargon and technical words.
+ - Do not refer to the instructions in your output.
+ - Do not generate any CSS. Do not generate code block formatting.
+ - You must not include any small talk or conversation starter that is not strictly business related.
+ - Strictly do not create or infer data that is not explicitly provided in the input JSON.
+ - Do not attribute any positive or negative traits in the summary.
+
+
+Data: ``` {!$Flow:eucoreai__EnrgyGetAcctSummary.Prompt} ```
+ Now generate the summary.</content>
+        <inputs>
+            <apiName>objectToSummarize</apiName>
+            <definition>SOBJECT://Account</definition>
+            <referenceName>Input:Account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://eucoreai__EnrgyGetAcctSummary</definition>
+            <parameters>
+                <definition>SOBJECT://Account</definition>
+                <isRequired>true</isRequired>
+                <parameterName>objectToSummarize</parameterName>
+                <valueExpression>{!$Input:Account}</valueExpression>
+            </parameters>
+            <referenceName>Flow:eucoreai__EnrgyGetAcctSummary</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__recordSummary</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

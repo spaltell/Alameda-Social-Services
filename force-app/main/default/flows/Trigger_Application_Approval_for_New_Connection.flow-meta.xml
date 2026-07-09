@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Calls an action to send the Individual Application record with an ID that matches the triggering Individual Application ID, for manual approval.</description>
+        <name>SendForApproval</name>
+        <label>Send for Approval</label>
+        <locationX>737</locationX>
+        <locationY>1106</locationY>
+        <actionName>submit</actionName>
+        <actionType>submit</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>objectId</name>
+            <value>
+                <elementReference>ApplicationId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>submit</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <description>Determines whether the Program ID exists.</description>
+        <name>HasActiveProgram</name>
+        <label>Has Active Program Product?</label>
+        <locationX>605</locationX>
+        <locationY>674</locationY>
+        <defaultConnector>
+            <targetReference>Get_Action_Plan_Template</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes (Default)</defaultConnectorLabel>
+        <rules>
+            <name>NoProgram</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetProgramProduct.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>No Program</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the individual application item ID exists.</description>
+        <name>HasApplicationItems</name>
+        <label>Application Has Items?</label>
+        <locationX>407</locationX>
+        <locationY>458</locationY>
+        <defaultConnector>
+            <targetReference>GetProgramProduct</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes (Default)</defaultConnectorLabel>
+        <rules>
+            <name>NoItems</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFirstApplicationItem.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>No Items</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the individual application ID exists.</description>
+        <name>IsValidApplication</name>
+        <label>Is Valid Application?</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <defaultConnector>
+            <targetReference>GetFirstApplicationItem</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes (Default)</defaultConnectorLabel>
+        <rules>
+            <name>InvalidApplication</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetApplication.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>No</label>
+        </rules>
+    </decisions>
+    <description>12/19/25: Debarshi</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>StartDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <interviewLabel>Trigger Application Approval for New Connection {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Trigger Application Approval for New Connection</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Associate the action plan to this Application via given Action Plan Template.</description>
+        <name>Create_Action_Plan</name>
+        <label>Create Action Plan</label>
+        <locationX>737</locationX>
+        <locationY>890</locationY>
+        <connector>
+            <targetReference>UpdateApplicationStatus</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>ActionPlanState</field>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ActionPlanTemplateVersionId</field>
+            <value>
+                <elementReference>Get_Action_Plan_Template.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ActionPlanType</field>
+            <value>
+                <stringValue>Industries</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>Verify New Connection Application</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>Get_Action_Plan_Template.ActionPlanTemplate.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StartDate</field>
+            <value>
+                <elementReference>StartDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>TargetId</field>
+            <value>
+                <elementReference>GetApplication.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>ActionPlan</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <description>Get Published Action Plan Template version with a given name.</description>
+        <name>Get_Action_Plan_Template</name>
+        <label>Get Action Plan Template</label>
+        <locationX>737</locationX>
+        <locationY>782</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_Action_Plan</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Verify New Connection Application</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ActionPlanTemplateVersion</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the details of the submitted individual applications for a program.</description>
+        <name>GetApplication</name>
+        <label>Get Application</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsValidApplication</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ApplicationId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Submitted</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Category</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>New Connection</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>IndividualApplication</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the first individual application item record with an individual application ID that matches the ApplicationId variable.</description>
+        <name>GetFirstApplicationItem</name>
+        <label>Get First Application Item</label>
+        <locationX>407</locationX>
+        <locationY>350</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HasApplicationItems</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IndividualApplicationId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ApplicationId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>IndividualApplicationItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active Program Product record associated with the individual application item record.</description>
+        <name>GetProgramProduct</name>
+        <label>Get Program Product</label>
+        <locationX>605</locationX>
+        <locationY>566</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HasActiveProgram</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetFirstApplicationItem.RelatedItemId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ProgramProduct</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Updates the status of the Individual Application record with an ID that matches the triggering Individual Application ID, setting the status to In Review.</description>
+        <name>UpdateApplicationStatus</name>
+        <label>Update Application Status</label>
+        <locationX>737</locationX>
+        <locationY>998</locationY>
+        <connector>
+            <targetReference>SendForApproval</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetApplication.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>In Review</stringValue>
+            </value>
+        </inputAssignments>
+        <object>IndividualApplication</object>
+    </recordUpdates>
+    <runInMode>DefaultMode</runInMode>
+    <sourceTemplate>euccontractor__ContractorEnrlApproval</sourceTemplate>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>GetApplication</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Stores the ID of the submitted individual application associated with the program.</description>
+        <name>ApplicationId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

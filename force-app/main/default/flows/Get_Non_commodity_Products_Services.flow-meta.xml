@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>PromptOutput</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>PromptOutput</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>
+{
+ProductName : {!Loop_PriceBookEntries.Product2.Name}, 
+ProductDescription : {!Loop_PriceBookEntries.Product2.Description}, 
+ProductId : {!Loop_PriceBookEntries.Product2.Id}, 
+PriceBookEntryId : {!Loop_PriceBookEntries.Id}
+},
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_PriceBookEntries</targetReference>
+        </connector>
+    </assignments>
+    <environments>Default</environments>
+    <interviewLabel>Get Non commodity Products Services {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Non commodity Products Services</label>
+    <loops>
+        <name>Loop_PriceBookEntries</name>
+        <label>Loop PriceBookEntries</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_PricebookEntry</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>PromptOutput</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <name>Get_Pricebook</name>
+        <label>Get Pricebook Id</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_ProductCategory</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Standard Price Book</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Pricebook2</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_PricebookEntry</name>
+        <label>Get PricebookEntry</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_PriceBookEntries</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Product2Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ProductIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Pricebook2Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Pricebook.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>PricebookEntry</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_ProductCategory</name>
+        <label>Get ProductCategory</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_ProductCategoryProduct</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Add On Products Category</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ProductCategory</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_ProductCategoryProduct</name>
+        <label>Get ProductCategoryProduct</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>ProductIds</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ProductCategoryId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_ProductCategory.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>ProductCategoryProduct</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Products</name>
+        <label>Get Products</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_PricebookEntry</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ProductIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Product2</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Pricebook</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <transforms>
+        <name>ProductIds</name>
+        <label>ProductIds</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Products</targetReference>
+        </connector>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <scale>0</scale>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <transformValues>
+            <transformValueActions>
+                <transformType>Map</transformType>
+                <value>
+                    <elementReference>Get_ProductCategoryProduct[$EachItem].ProductId</elementReference>
+                </value>
+            </transformValueActions>
+        </transformValues>
+    </transforms>
+</Flow>

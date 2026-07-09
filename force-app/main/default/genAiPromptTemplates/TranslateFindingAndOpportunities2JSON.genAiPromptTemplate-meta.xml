@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_1</activeVersionIdentifier>
+    <developerName>TranslateFindingAndOpportunities2JSON</developerName>
+    <masterLabel>TranslateFindingAndOpportunities2JSON</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>0.Summary of Finding and Opportunities
+{!$Input:FindingsAndOpportunities}
+
+1. **Customer Name, Id and Premise Address:**
+{!$Flow:Get_Account_Data.Prompt}
+
+2. **From the following product and service catalog, recommend the most important products/services that address the issues you identified in the data. In addition to the primary product, also identify and include any related services (e.g., an installation service for a physical product). Do not recommend a product if there is no clear evidence for it.**
+ {!$Flow:Get_Non_commodity_Products_Services.Prompt}
+
+4.From the summary of Finding and Opportunities provide a final response as a JSON object with the following structure. Make the field values dynamic based on your analysis. If no products/services are recommended, only include the &quot;AnalysisSummary&quot; field. Otherwise, include &quot;EnergyOpportunity&quot; and &quot;EnergyQuote&quot; as well.  
+ 
+{ &quot;AccountId&quot;: &quot;AccountId&quot;, &quot;AnalysisSummary&quot;: &quot;Detailed summary of the energy analysis, covering key findings from metering data, contract evaluation, and identified risks, inefficiencies, or opportunities. This summary should provide enough detail for a case to be created even if no specific product recommendations are made.&quot;, &quot;EnergyOpportunity&quot;: { &quot;Name&quot;: &quot;Define a clear name for the opportunity&quot;, &quot;Description&quot;: &quot;Summary of the opportunity that will help the Key account Manager understand it&quot; }, &quot;EnergyQuote&quot;: { &quot;Name&quot;: &quot;Define Clear name for the quote&quot;, &quot;EnergyQuoteLineItems&quot;: [ { &quot;Product2Id&quot;: &quot;Product2Id&quot;, &quot;Quantity&quot;: 1, &quot;Description&quot;: &quot;Summary of why the product/service is suggested&quot;, &quot;ProductName&quot;: &quot;ProductName&quot;, &quot;PricebookEntryId&quot;: &quot;PricebookEntryId&quot; } ] } }
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>ServicePoint</apiName>
+            <definition>SOBJECT://ServicePoint</definition>
+            <masterLabel>ServicePoint</masterLabel>
+            <referenceName>Input:ServicePoint</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>FindingsAndOpportunities</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>FindingsAndOpportunities</masterLabel>
+            <referenceName>Input:FindingsAndOpportunities</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Get_Account_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Account_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Non_commodity_Products_Services</definition>
+            <referenceName>Flow:Get_Non_commodity_Products_Services</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

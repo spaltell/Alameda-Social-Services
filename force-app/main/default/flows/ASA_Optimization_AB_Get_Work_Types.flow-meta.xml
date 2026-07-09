@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Eligible_Work_Types</name>
+        <label>Assign Eligible Work Types</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>Eligible_Work_Types_List</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Swap Meter</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Eligible_Work_Types_List</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Meter Read</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Eligible_Work_Types_List</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Installation</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Work_Types</targetReference>
+        </connector>
+    </assignments>
+    <description>04/29: Debarshi: If the user is looking schedule an appointment with us, ensure that we have a work type that matches their request</description>
+    <environments>Default</environments>
+    <interviewLabel>ASA Optimization AB Get Work Types {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ASA Optimization AB Get Work Types</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Work_Types</name>
+        <label>Get Work Types</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <filterLogic>1 AND 2</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>Eligible_Work_Types_List</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Field Service Lightning (FSL)</stringValue>
+            </value>
+        </filters>
+        <object>WorkType</object>
+        <outputReference>Work_Types</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Description</queriedFields>
+    </recordLookups>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Eligible_Work_Types</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Eligible_Work_Types_List</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is the requested type of service that the user is looking for</description>
+        <name>Requested_Service</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is a list of work types that we can offer. Do not show this to the user, just ensure their request fits one of these.</description>
+        <name>Work_Types</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>WorkType</objectType>
+    </variables>
+</Flow>

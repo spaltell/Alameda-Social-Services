@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Adds the recordId value to the ids collection.</description>
+        <name>AddRecordIdToCollection</name>
+        <label>Add Record ID To Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ids</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SetRecordIdCount</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the RecordIdCount to the number of records in the ids collection variable.</description>
+        <name>SetRecordIdCount</name>
+        <label>Set Record ID Count</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>RecordIdCount</assignToReference>
+            <operator>AssignCount</operator>
+            <value>
+                <elementReference>GetTimeSheetEntryItems</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>RecordCountLessThanOrEqualToMaximum</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the RejectedRecordCount to the number of records in the Time Sheet Entry Items from Get Time Sheet Entry Items record collection variable.</description>
+        <name>SetRejectedRecordCount</name>
+        <label>Set Rejected Record Count</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>RejectedRecordCount</assignToReference>
+            <operator>AssignCount</operator>
+            <value>
+                <elementReference>GetTimeSheetEntryItems</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverTimeSheetEntryItems</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the time sheet ID of the current record in the loop to the TimeSheetEntryIds collection variable and the PreviousTimesheetEntryId variable.</description>
+        <name>SetTimesheetEntryIdVariables</name>
+        <label>Set Timesheet Entry ID Variables</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>TimeSheetEntryIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverTimeSheetEntryItems.TimeSheetEntryId</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PreviousTimeSheetEntryId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IterateOverTimeSheetEntryItems.TimeSheetEntryId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IsTimeSheetIdEqualToPreviousTimeSheetId</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the time sheet ID of the current record in the loop to the TimeSheetIds collection variable and the PreviousTimesheetId variable.</description>
+        <name>SetTimesheetIdVariables</name>
+        <label>Set Timesheet ID Variables</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>TimeSheetIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverTimeSheetEntryItems.TimeSheetEntry.TimeSheetId</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PreviousTimesheetId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IterateOverTimeSheetEntryItems.TimeSheetEntry.TimeSheetId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverTimeSheetEntryItems</targetReference>
+        </connector>
+    </assignments>
+    <constants>
+        <description>Stores the maximum number of time sheet record IDs that can be approved.</description>
+        <name>MaximumRecordIdCount</name>
+        <dataType>Number</dataType>
+        <value>
+            <numberValue>50.0</numberValue>
+        </value>
+    </constants>
+    <constants>
+        <description>Stores the text that is displayed to the flow user when no records are found.</description>
+        <name>NoRecordsFoundText</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>We couldn’t find any time sheet entry item records. Ask your admin for help.</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <description>Stores the text that’s shown when a time sheet entry item record is rejected.</description>
+        <name>TimeSheetEntryItemRejectedMessage</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>The time sheet entry item was rejected.</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <description>Stores the text that’s shown when time sheet entry item records are rejected.</description>
+        <name>TimeSheetsEntryItemsRejectedMessage</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>The time sheet entry item records were rejected.</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <description>Determines whether a Record ID was passed into the flow by checking if the recordId variable contains a value.</description>
+        <name>HaveRecordId</name>
+        <label>Have Record ID?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SetRecordIdCount</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasRecordId</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>recordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>recordId</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddRecordIdToCollection</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether a Record ID was passed into the flow by checking if the recordId variable contains a value.</description>
+        <name>HaveRecordIdDisplayRejection</name>
+        <label>Have Record ID?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>DisplayTimeSheetEntryItemsRejectedMessage</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasRecordIdDisplayRejection</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>recordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>recordId</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ScrnDplyTmshtEntryItemRejectedMessage</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether time sheet entry item records were found by checking if the Time Sheet Entry Items from Get Time Sheet Entry Items record collection contains a record.</description>
+        <name>HaveTimeSheetEntryItems</name>
+        <label>Have Time Sheets Entry Items?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>ScreenDisplayErrorNoRecords</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasTimeSheetEntryItems</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetTimeSheetEntryItems</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>GetTimeSheetEntryItems</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ScreenSelectRejectReason</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the time sheet ID of the current record in the loop is the same as the previous one in the loop by checking if PreviousTimesheetId matches the timesheet ID of the current record on the loop.</description>
+        <name>IsTimeSheetIdEqualToPreviousTimeSheetId</name>
+        <label>Is Time Sheet ID Equal to Previous Time Sheet ID?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SetTimesheetIdVariables</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>IsEqualToPreviousTimeSheetId</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverTimeSheetEntryItems.TimeSheetEntry.TimeSheetId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>PreviousTimesheetId</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IterateOverTimeSheetEntryItems</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the time sheet entry ID of the current record in the loop is the same as the previous one in the loop by checking if PreviousTimesheeEntrytId matches the timesheet ID of the current record in the loop.</description>
+        <name>IsTmshtEntrIdEqToPrevTimeSheetEntryId</name>
+        <label>Is Time Sheet Entry ID Equal To Previous Time Sheet Entry ID?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SetTimesheetEntryIdVariables</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>IsEqualToPrevTimeSheetEntryId</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverTimeSheetEntryItems.TimeSheetEntryId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>PreviousTimeSheetEntryId</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IterateOverTimeSheetEntryItems</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the record count exceeds the allowed maximum by checking whether RecordIdCount is less than or equal to MaximumRecordIdCount.</description>
+        <name>RecordCountLessThanOrEqualToMaximum</name>
+        <label>Record Count Less Than or Equal to Maximum?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>ScreenDisplayErrorMaxRecords</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>DoesHaveRecCountLessThanOrEqualToMaximum</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>RecordIdCount</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>MaximumRecordIdCount</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetTimeSheetEntryItems</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>DS</description>
+    <environments>Default</environments>
+    <interviewLabel>Reject Time Sheet Entry Items {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Reject Time Sheet Entry Items</label>
+    <loops>
+        <description>Repeats actions for each record in the Time Sheet Entry Items from Get Time Sheet Entry Items collection.</description>
+        <name>IterateOverTimeSheetEntryItems</name>
+        <label>Iterate Over Time Sheet Entry Items</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetTimeSheetEntryItems</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>IsTmshtEntrIdEqToPrevTimeSheetEntryId</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>UpdateTimeSheetEntries</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordLookups>
+        <description>Gets time sheet entry item records with an ID in the ids collection variable. Stores the results in Time Sheet Entry Items from Get Time Sheet Entry Items collection.</description>
+        <name>GetTimeSheetEntryItems</name>
+        <label>Get Time Sheet Entry Items</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveTimeSheetEntryItems</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>RollbackRecordChanges</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ids</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>TimeSheetEntryItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordRollbacks>
+        <description>Rolls back the current record update and reverts all previous record changes after flow execution.</description>
+        <name>RollbackRecordChanges</name>
+        <label>Rollback Record Changes</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>ScrnDplyErrorUpdtTimeSheets</targetReference>
+        </connector>
+    </recordRollbacks>
+    <recordUpdates>
+        <description>Updates the time sheet entry records with IDs that match those in the TimeSheetEntryIds collection, setting the status comment to the RejectionReasonText value, and the status to Rejected.</description>
+        <name>UpdateTimeSheetEntries</name>
+        <label>Update Time Sheet Entries</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>UpdateTimeSheets</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>RollbackRecordChanges</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>TimeSheetEntryIds</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Rejected</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StatusComment</field>
+            <value>
+                <elementReference>RejectionReasonText</elementReference>
+            </value>
+        </inputAssignments>
+        <object>TimeSheetEntry</object>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Updates the TimeSheetEntryItems records with IDs that match those in the ids collection, setting the status comment to the RejectionReasonText value, and the status to Rejected.</description>
+        <name>UpdateTimeSheetEntryItems</name>
+        <label>Update Time Sheet Entry Items</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>SetRejectedRecordCount</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>RollbackRecordChanges</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ids</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Rejected</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StatusComment</field>
+            <value>
+                <elementReference>RejectionReasonText</elementReference>
+            </value>
+        </inputAssignments>
+        <object>TimeSheetEntryItem</object>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Updates the time sheet records with IDs that match those in the TimeSheetIds collection, setting the status comment to the RejectionReasonText value, and the status to Rejected.</description>
+        <name>UpdateTimeSheets</name>
+        <label>Update Time Sheets</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>HaveRecordIdDisplayRejection</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>RollbackRecordChanges</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>TimeSheetIds</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Rejected</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StatusComment</field>
+            <value>
+                <elementReference>RejectionReasonText</elementReference>
+            </value>
+        </inputAssignments>
+        <object>TimeSheet</object>
+    </recordUpdates>
+    <screens>
+        <description>Displays a message to the flow user when time sheet entry item records are rejected.</description>
+        <name>DisplayTimeSheetEntryItemsRejectedMessage</name>
+        <label>Display Time Sheet Entry Items Rejected Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>TimeSheetEntryItemsRejectedDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;{!&lt;/strong&gt;&lt;strong style=&quot;font-size: 11pt; background-color: transparent; color: rgb(0, 0, 0); font-family: Arial, sans-serif;&quot;&gt;TimeSheetEntryItems&lt;/strong&gt;&lt;strong style=&quot;font-size: 12pt; background-color: transparent; color: rgb(0, 0, 0); font-family: &amp;quot;Arial Narrow&amp;quot;, sans-serif;&quot;&gt;Rejected&lt;/strong&gt;&lt;strong style=&quot;font-size: 11pt; background-color: transparent; color: rgb(0, 0, 0); font-family: Arial, sans-serif;&quot;&gt;Message&lt;/strong&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;}&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 11pt;&quot;&gt;Number of time sheet entry items rejected:&lt;/strong&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!RejectedRecordCount}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Displays an error to the flow user when the number of records to be rejected is greater than the allowed maximum.</description>
+        <name>ScreenDisplayErrorMaxRecords</name>
+        <label>Display Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ErrorMaximumRecordsDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: transparent; font-size: 12px;&quot;&gt;The number of selected time sheet entry item records exceeds the allowed maximum of {!MaximumRecordIdCount}.Select less records and try again.&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Displays an error to the flow user when no time sheet entry records are found.</description>
+        <name>ScreenDisplayErrorNoRecords</name>
+        <label>Display Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ErrorNoRecordsDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;{!NoRecordsFoundText}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Allows the flow user to specify a reason for rejecting the time sheet entry items.</description>
+        <name>ScreenSelectRejectReason</name>
+        <label>Select Reject Reason</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>UpdateTimeSheetEntryItems</targetReference>
+        </connector>
+        <fields>
+            <name>RejectionReasonText</name>
+            <dataType>String</dataType>
+            <fieldText>Reason for Rejecting Time Sheet Entry Items</fieldText>
+            <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <nextOrFinishButtonLabel>Submit</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Displays an error to the flow user when there’s an error updating the time sheet records.</description>
+        <name>ScrnDplyErrorUpdtTimeSheets</name>
+        <label>Display Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ErrorUpdateTimeSheetDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: transparent; font-size: 12px;&quot;&gt;We couldn’t update the time sheet records. &lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: transparent; font-size: 12px;&quot;&gt;{!$Flow.FaultMessage}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Displays a message to the flow user when a single time sheet entry item record is rejected.</description>
+        <name>ScrnDplyTmshtEntryItemRejectedMessage</name>
+        <label>Display Time Sheet Entry Item Rejected Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>TimeSheetEntryItemRejectedDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;{!TimeSheetEntryItemRejectedMessage}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <sourceTemplate>ifstmsht__RejectTimeSheetEntryItems</sourceTemplate>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>HaveRecordId</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Stores a collection of time sheet entry item record IDs.</description>
+        <name>ids</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the time sheet entry ID of the previous time sheet entry record iterated through in the loop.</description>
+        <name>PreviousTimeSheetEntryId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the time sheet ID of the previous time sheet entry record iterated through in the loop.</description>
+        <name>PreviousTimesheetId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the ID of the time sheet entry item record that’s passed into the flow.</description>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the number of records in the ids collection variable.</description>
+        <name>RecordIdCount</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+    </variables>
+    <variables>
+        <description>Stores the number of rejected Time Sheet Entry Item records.</description>
+        <name>RejectedRecordCount</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+    </variables>
+    <variables>
+        <description>Stores a collection of time sheet entry IDs.</description>
+        <name>TimeSheetEntryIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores a collection of time sheet IDs.</description>
+        <name>TimeSheetIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

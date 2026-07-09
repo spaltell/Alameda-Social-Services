@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Prompt_Output</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Prompt Output</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>  {
+      &quot;MeteringPointId&quot;: {!Loop_MeterConsumption.MeteringPointId__c},
+      &quot;MeasurementDate&quot;: {!Loop_MeterConsumption.MeasurementDate__c},
+      &quot;DailyActiveEnergy_kWh&quot;: {!Loop_MeterConsumption.DailyActiveEnergy_kWh__c},
+      &quot;DailyPeakDemand_kW&quot;: {!Loop_MeterConsumption.DailyPeakDemand_kW__c},
+      &quot;PeakDemandTimestamp&quot;: {!Loop_MeterConsumption.PeakDemandTimestamp__c},
+      &quot;DailyReactiveEnergy_kVARh&quot;: {!Loop_MeterConsumption.DailyReactiveEnergy_kVARh__c},
+      &quot;Power Factor&quot;: {!Loop_MeterConsumption.PowerFactor__c}
+   },
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_MeterConsumption</targetReference>
+        </connector>
+    </assignments>
+    <environments>Default</environments>
+    <formulas>
+        <name>date30DaysAgo</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() - 30</expression>
+    </formulas>
+    <interviewLabel>Get Aggregated Metering Data {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Aggregated Metering Data</label>
+    <loops>
+        <name>Loop_MeterConsumption</name>
+        <label>Loop MeterConsumption</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_MeterConsumption</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Prompt_Output</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <name>Get_MeterConsumption</name>
+        <label>Get MeterConsumption</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_MeterConsumption</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MeteringPointId__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ServicePoint.ExternalIdentifier</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MeasurementDate__c</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>date30DaysAgo</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>MeterConsumption_Fact__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_MeterConsumption</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>ServicePoint</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ServicePoint</objectType>
+    </variables>
+</Flow>

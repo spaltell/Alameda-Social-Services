@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Update_Arrival_Start_and_End</name>
+        <label>Update Arrival Start and End</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignmentItems>
+            <assignToReference>Updated_Time</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Formatted_Window</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Updates the Service Appointment with the Selected Arrival Start and End Windows</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Formatted_Window</name>
+        <dataType>String</dataType>
+        <expression>TEXT({!SelectedArrivalWindowStart}) + &quot; to &quot; + TEXT({!SelectedArrivalWindowEnd})</expression>
+    </formulas>
+    <interviewLabel>ASA Optimization AB {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ASA Optimization AB Update Service Appointment</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Service_Appointment</name>
+        <label>Update Service Appointment</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <connector>
+            <targetReference>Update_Arrival_Start_and_End</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Service_Appointment_ID</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>ArrivalWindowEndTime</field>
+            <value>
+                <elementReference>SelectedArrivalWindowEnd</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ArrivalWindowStartTime</field>
+            <value>
+                <elementReference>SelectedArrivalWindowStart</elementReference>
+            </value>
+        </inputAssignments>
+        <object>ServiceAppointment</object>
+    </recordUpdates>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_Service_Appointment</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>This is the user&apos;s selected end time</description>
+        <name>SelectedArrivalWindowEnd</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is the user&apos;s selected start time</description>
+        <name>SelectedArrivalWindowStart</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is the created Service_Appointment_ID</description>
+        <name>Service_Appointment_ID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>This is the updated arrival window to output for the agent to present as needed</description>
+        <name>Updated_Time</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

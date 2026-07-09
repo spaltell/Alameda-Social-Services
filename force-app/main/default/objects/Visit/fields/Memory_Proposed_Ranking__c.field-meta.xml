@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Memory_Proposed_Ranking__c</fullName>
+    <description>AI-proposed ranking for Memory need category</description>
+    <inlineHelpText>Ranking proposed by AI based on field observations. Worker can accept or override.</inlineHelpText>
+    <label>Memory - Proposed Ranking</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Rank 1</fullName>
+                <default>false</default>
+                <label>Rank 1</label>
+            </value>
+            <value>
+                <fullName>Rank 2</fullName>
+                <default>false</default>
+                <label>Rank 2</label>
+            </value>
+            <value>
+                <fullName>Rank 3</fullName>
+                <default>false</default>
+                <label>Rank 3</label>
+            </value>
+            <value>
+                <fullName>Rank 4</fullName>
+                <default>false</default>
+                <label>Rank 4</label>
+            </value>
+            <value>
+                <fullName>Rank 5</fullName>
+                <default>false</default>
+                <label>Rank 5</label>
+            </value>
+            <value>
+                <fullName>Rank 6</fullName>
+                <default>false</default>
+                <label>Rank 6</label>
+            </value>
+            <value>
+                <fullName>Insufficient Evidence</fullName>
+                <default>false</default>
+                <label>Insufficient Evidence</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

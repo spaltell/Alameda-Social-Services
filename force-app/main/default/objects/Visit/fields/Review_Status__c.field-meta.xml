@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Review_Status__c</fullName>
+    <description>Review and approval status of the assessment</description>
+    <inlineHelpText>Tracks whether the assessment has been reviewed and approved by the worker.</inlineHelpText>
+    <label>Review Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Worker Reviewed</fullName>
+                <default>false</default>
+                <label>Worker Reviewed</label>
+            </value>
+            <value>
+                <fullName>Submitted to Supervisor</fullName>
+                <default>false</default>
+                <label>Submitted to Supervisor</label>
+            </value>
+            <value>
+                <fullName>Supervisor Approved</fullName>
+                <default>false</default>
+                <label>Supervisor Approved</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

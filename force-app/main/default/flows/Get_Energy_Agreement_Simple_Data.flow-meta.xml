@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Add_Prompt_Instructions_1</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Prompt Instructions 1</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{ 
+ContractProductName : {!Loop_AgreementProductSchedule.SalesAgreementProduct.Name} , 
+PeriodStartDate:{!Loop_AgreementProductSchedule.StartDate},
+PeriodEndDate:{!Loop_AgreementProductSchedule.EndDate},
+PeriodPlannedQuantity: {!Loop_AgreementProductSchedule.PlannedQuantity},
+PeriodActualQuantity: {!Loop_AgreementProductSchedule.ActualQuantity} ,
+PeriodTolerance:
+{!Loop_AgreementProductSchedule.Tolerance__c}%
+}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_AgreementProductSchedule</targetReference>
+        </connector>
+    </assignments>
+    <environments>Default</environments>
+    <formulas>
+        <name>TodayDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <interviewLabel>Get Energy Agreement Simple Data {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Energy Agreement Simple Data</label>
+    <loops>
+        <name>Loop_AgreementProductSchedule</name>
+        <label>Loop AgreementProductSchedule</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_SalesAgreementProductSchedule</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Prompt_Instructions_1</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <name>Get_Sales_Agreement_Products</name>
+        <label>Get Sales Agreement Products</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AgreementProductIds</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SalesAgreementId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>EnergyAgreement.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>SalesAgreementProduct</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_SalesAgreementProductSchedule</name>
+        <label>Get SalesAgreementProductSchedule</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_AgreementProductSchedule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SalesAgreementProductId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>AgreementProductIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EndDate</field>
+            <operator>LessThan</operator>
+            <value>
+                <elementReference>TodayDate</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>SalesAgreementProductSchedule</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Sales_Agreement_Products</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <transforms>
+        <name>AgreementProductIds</name>
+        <label>AgreementProductIds</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_SalesAgreementProductSchedule</targetReference>
+        </connector>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <scale>0</scale>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <transformValues>
+            <transformValueActions>
+                <transformType>Map</transformType>
+                <value>
+                    <elementReference>Get_Sales_Agreement_Products[$EachItem].Id</elementReference>
+                </value>
+            </transformValueActions>
+        </transformValues>
+    </transforms>
+    <variables>
+        <name>EnergyAgreement</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>SalesAgreement</objectType>
+    </variables>
+</Flow>

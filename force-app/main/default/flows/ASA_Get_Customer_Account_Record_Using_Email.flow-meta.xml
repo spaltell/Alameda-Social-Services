@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Uses an email to retrieve the account record using the billing email address field</description>
+    <environments>Default</environments>
+    <interviewLabel>ASA Get Customer Account Record Using Email {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ASA Get Customer Account Record Using Email</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Account_Record_using_Email</name>
+        <label>Get Account Record using Email</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Email_Id__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Email</elementReference>
+            </value>
+        </filters>
+        <object>Account</object>
+        <outputReference>Account</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>BudgetBillAmount__c</queriedFields>
+        <queriedFields>BudgetBilling__c</queriedFields>
+        <queriedFields>Status__c</queriedFields>
+        <queriedFields>Type</queriedFields>
+    </recordLookups>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Account_Record_using_Email</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Account</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Account</objectType>
+    </variables>
+    <variables>
+        <name>Email</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

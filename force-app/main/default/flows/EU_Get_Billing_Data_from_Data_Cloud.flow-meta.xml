@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>ConcatenatedBill</name>
+        <label>ConcatenatedBill</label>
+        <locationX>176</locationX>
+        <locationY>842</locationY>
+        <assignmentItems>
+            <assignToReference>billingData</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>electricBillData</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>billingData</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>gasBillData</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>ElectricBills</name>
+        <label>ElectricBills</label>
+        <locationX>264</locationX>
+        <locationY>566</locationY>
+        <assignmentItems>
+            <assignToReference>electricBillData</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>electricBillDetails</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>loop</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>GasBills</name>
+        <label>GasBills</label>
+        <locationX>528</locationX>
+        <locationY>566</locationY>
+        <assignmentItems>
+            <assignToReference>gasBillData</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>gasBillDetails</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>loop</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>BillDivision</name>
+        <label>BillDivision</label>
+        <locationX>396</locationX>
+        <locationY>458</locationY>
+        <defaultConnector>
+            <targetReference>GasBills</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Gas</defaultConnectorLabel>
+        <rules>
+            <name>Electricity</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>loop.bill_division__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>EL</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ElectricBills</targetReference>
+            </connector>
+            <label>Electricity</label>
+        </rules>
+    </decisions>
+    <description>5/23: Debarshi: For High Bill Agentforce Demo</description>
+    <environments>Default</environments>
+    <interviewLabel>EU Get Billing Data from Data Cloud {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>EU Get Billing Data from Data Cloud</label>
+    <loops>
+        <name>loop</name>
+        <label>loop</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <collectionReference>Get_Billing_Data</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>BillDivision</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>ConcatenatedBill</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Account_Number</name>
+        <label>Get Account Number</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Billing_Data</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>BillingEmailAddress__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>customerEmail</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>AccountNumber</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Billing_Data</name>
+        <label>Get Billing Data</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>loop</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>contract_account_id__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Account_Number.AccountNumber</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>EU_Billing_Data__c</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>invoice_date__c</queriedFields>
+        <queriedFields>bill_division__c</queriedFields>
+        <queriedFields>bill_usage__c</queriedFields>
+        <queriedFields>epp__c</queriedFields>
+        <queriedFields>has_my_account__c</queriedFields>
+        <queriedFields>auto_payment__c</queriedFields>
+        <queriedFields>bill_duration__c</queriedFields>
+        <queriedFields>service_city__c</queriedFields>
+        <queriedFields>owner__c</queriedFields>
+        <queriedFields>bill_amount__c</queriedFields>
+        <queriedFields>bill_estimate_flag__c</queriedFields>
+        <queriedFields>my_alerts__c</queriedFields>
+        <queriedFields>paperless_bill__c</queriedFields>
+        <sortField>invoice_date__c</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Account_Number</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>billingDataConcatenated</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;bill&gt;
+&quot;Invoice Date&quot;: {!loop.invoice_date__c}, 
+&quot;Type:&quot;: {!loop.bill_division__c},
+&quot;Bill Amount&quot;: ${!loop.bill_amount__c},
+ &quot;Usage&quot;: {!loop.bill_usage__c},
+&quot;Bill Duration&quot;:{!loop.bill_duration__c},
+&quot;Bill Estimate&quot;: {!loop.bill_estimate_flag__c},
+&quot;EPP&quot;: {!loop.epp__c}
+&quot;Owner&quot;: {!loop.owner__c},
+&quot;Auto Payment&quot;:{!loop.auto_payment__c},
+&quot;Paperless Bill&quot;: {!loop.paperless_bill__c},
+&quot;MyAlert&quot;: {!loop.my_alerts__c},
+&quot;EnrolledMyAccount&quot;:{!loop.has_my_account__c},
+&quot;ServiceCity&quot;: {!loop.service_city__c}
+&lt;/bill&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>electricBillDetails</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;electricbill&gt;
+&quot;Invoice Date&quot;: {!loop.invoice_date__c}, 
+&quot;Type:&quot;: {!loop.bill_division__c},
+&quot;Bill Amount&quot;: ${!loop.bill_amount__c},
+ &quot;Usage&quot;: {!loop.bill_usage__c} kWh,
+&quot;Bill Duration&quot;:{!loop.bill_duration__c},
+&quot;Bill Estimate&quot;: {!loop.bill_estimate_flag__c},
+&quot;EPP&quot;: {!loop.epp__c}
+&quot;Owner&quot;: {!loop.owner__c},
+&quot;Auto Payment&quot;:{!loop.auto_payment__c},
+&quot;Paperless Bill&quot;: {!loop.paperless_bill__c},
+&quot;MyAlert&quot;: {!loop.my_alerts__c},
+&quot;EnrolledMyAccount&quot;:{!loop.has_my_account__c},
+&quot;ServiceCity&quot;: {!loop.service_city__c}
+&lt;/electricbill&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>gasBillDetails</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;gasbill&gt;
+&quot;Invoice Date&quot;: {!loop.invoice_date__c}, 
+&quot;Type:&quot;: {!loop.bill_division__c},
+&quot;Bill Amount&quot;: ${!loop.bill_amount__c},
+ &quot;Usage&quot;: {!loop.bill_usage__c},
+&quot;Bill Duration&quot;:{!loop.bill_duration__c},
+&quot;Bill Estimate&quot;: {!loop.bill_estimate_flag__c},
+&quot;EPP&quot;: {!loop.epp__c}
+&quot;Owner&quot;: {!loop.owner__c},
+&quot;Auto Payment&quot;:{!loop.auto_payment__c},
+&quot;Paperless Bill&quot;: {!loop.paperless_bill__c},
+&quot;MyAlert&quot;: {!loop.my_alerts__c},
+&quot;EnrolledMyAccount&quot;:{!loop.has_my_account__c},
+&quot;ServiceCity&quot;: {!loop.service_city__c}
+&lt;/gasbill&gt;</text>
+    </textTemplates>
+    <variables>
+        <description>billing details for the account</description>
+        <name>billingData</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>customerEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>electricBillData</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>gasBillData</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>GetBillingData</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>EU_Billing_Data__c</objectType>
+    </variables>
+</Flow>

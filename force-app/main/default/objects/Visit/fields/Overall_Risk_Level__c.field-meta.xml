@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Overall_Risk_Level__c</fullName>
+    <description>Overall risk level determined from assessment</description>
+    <inlineHelpText>High, Medium, or Low risk level based on all needs categories.</inlineHelpText>
+    <label>Overall Risk Level</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>High</fullName>
+                <default>false</default>
+                <label>High</label>
+            </value>
+            <value>
+                <fullName>Medium</fullName>
+                <default>false</default>
+                <label>Medium</label>
+            </value>
+            <value>
+                <fullName>Low</fullName>
+                <default>false</default>
+                <label>Low</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

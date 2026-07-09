@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Prompt_Output</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Prompt Output</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!ServicePoint.Premises.VisitorAddress.Street}&quot;AccountName&quot; : {!Get_EnergyServiceAgreementItem.EnergyServiceAgreement.Account.Name},
+&quot;AccountId&quot; : {!Get_EnergyServiceAgreementItem.EnergyServiceAgreement.Account.Id},
+&quot;Premise Address&quot; : 
+{!ServicePoint.Premises.VisitorAddress.Street},
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <environments>Default</environments>
+    <interviewLabel>Get Account Data {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Account Data</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <name>Get_EnergyServiceAgreementItem</name>
+        <label>Get EnergyServiceAgreementItem</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Prompt_Output</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ServicePointId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ServicePoint.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>EnergyServiceAgreementItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_EnergyServiceAgreementItem</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>ServicePoint</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ServicePoint</objectType>
+    </variables>
+</Flow>

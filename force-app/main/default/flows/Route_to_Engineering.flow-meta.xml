@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Notification_to_User</name>
+        <label>Send Notification to User</label>
+        <locationX>176</locationX>
+        <locationY>539</locationY>
+        <actionName>customNotificationAction</actionName>
+        <actionType>customNotificationAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>customNotifTypeId</name>
+            <value>
+                <stringValue>0MLKa000000sgtqOAA</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>body</name>
+            <value>
+                <stringValue>A new solar interconnection application has been submitted and is ready for your review.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>New Interconnection Application - {!$Record.CaseNumber}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recipientIds</name>
+            <value>
+                <elementReference>varRecipientIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>targetId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>customNotificationAction</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Add_Owner_to_Recipients</name>
+        <label>Add Owner to Recipients</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>varRecipientIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Notification_to_User</targetReference>
+        </connector>
+    </assignments>
+    <description>Routes solar cases to engineering when documents are submitted</description>
+    <environments>Default</environments>
+    <interviewLabel>Route to Engineering {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Route to Engineering</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Case_Status_and_Owner</name>
+        <label>Update Case Status and Owner</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <connector>
+            <targetReference>Add_Owner_to_Recipients</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <stringValue>00GKa000003cOgjMAE</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_Case_Status_and_Owner</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varRecipientIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

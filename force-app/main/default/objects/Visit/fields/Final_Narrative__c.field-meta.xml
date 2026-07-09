@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Final_Narrative__c</fullName>
+    <description>Worker-approved final narrative for submission</description>
+    <inlineHelpText>This narrative is locked after approval and becomes the official assessment record.</inlineHelpText>
+    <label>Final Narrative</label>
+    <length>32768</length>
+    <type>Html</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

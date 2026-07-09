@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_3</activeVersionIdentifier>
+    <description>This prompt template analyzes a customer&apos;s energy consumption data from a specific Service Point and compares it against their active energy agreement and the company&apos;s product catalog.</description>
+    <developerName>AnalyzeServicePointOpportunities</developerName>
+    <masterLabel>AnalyzeServicePointOpportunities</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are an expert energy consultant specializing in commercial and industrial electricity.
+
+Your role is to analyze a customer&apos;s energy usage and contract data to identify risks, inefficiencies, or opportunities.
+
+If applicable, you must recommend suitable non-commodity products and services from the provided catalog.
+
+Your recommendations must be realistic and directly supported by the data.
+
+0. **Customer Name, Id and Premise Address:**
+{!$Flow:Get_Account_Data.Prompt}
+
+1. **Analyze the following customer metering data:**
+{!$Flow:Get_Aggregated_Metering_Data.Prompt}
+
+2. **Evaluate the following contract agreement data:**
+{!$Flow:Get_Energy_Agreement_Data.Prompt}
+
+3. **From the following product and service catalog, recommend the most important products/services that address the issues you identified in the data. In addition to the primary product, also identify and include any related services (e.g., an installation service for a physical product). Do not recommend a product if there is no clear evidence for it.**
+ {!$Flow:Get_Non_commodity_Products_Services.Prompt}
+
+4. **Provide your final response as a short, concise, and scannable text output. Do not use long paragraphs or technical jargon. Follow this exact format:**. 
+ 
+Summary of Findings: [A single, high-level sentence summarizing the main problems identified.]
+Top Opportunities:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+Recommended Solutions:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>ServicePoint</apiName>
+            <definition>SOBJECT://ServicePoint</definition>
+            <masterLabel>ServicePoint</masterLabel>
+            <referenceName>Input:ServicePoint</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Get_Account_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Account_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Aggregated_Metering_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Aggregated_Metering_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Energy_Agreement_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Energy_Agreement_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Non_commodity_Products_Services</definition>
+            <referenceName>Flow:Get_Non_commodity_Products_Services</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an expert energy consultant specializing in commercial and industrial electricity.
+
+Your role is to analyze a customer&apos;s energy usage and contract data to identify risks, inefficiencies, or opportunities.
+
+If applicable, you must recommend suitable non-commodity products and services from the provided catalog.
+
+Your recommendations must be realistic and directly supported by the data.
+
+0. **Customer Name, Id and Premise Address:**
+{!$Flow:Get_Account_Data.Prompt}
+
+1. **Evaluate the following contract agreement data:**
+
+
+2. **From the following product and service catalog, recommend the most important products/services that address the issues you identified in the data. In addition to the primary product, also identify and include any related services (e.g., an installation service for a physical product). Do not recommend a product if there is no clear evidence for it.**
+ {!$Flow:Get_Non_commodity_Products_Services.Prompt}
+
+3. **Provide your final response as a short, concise, and scannable text output. Do not use long paragraphs or technical jargon. Follow this exact format:**. 
+ 
+Summary of Findings: [A single, high-level sentence summarizing the main problems identified.]
+Top Opportunities:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+Recommended Solutions:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>ServicePoint</apiName>
+            <definition>SOBJECT://ServicePoint</definition>
+            <masterLabel>ServicePoint</masterLabel>
+            <referenceName>Input:ServicePoint</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Get_Account_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Account_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Non_commodity_Products_Services</definition>
+            <referenceName>Flow:Get_Non_commodity_Products_Services</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an expert energy consultant specializing in commercial and industrial electricity.
+
+Your role is to analyze a customer&apos;s energy usage and contract data to identify risks, inefficiencies, or opportunities.
+
+If applicable, you must recommend suitable non-commodity products and services from the provided catalog.
+
+Your recommendations must be realistic and directly supported by the data.
+
+0. **Customer Name, Id and Premise Address:**
+{!$Flow:Get_Account_Data.Prompt}
+
+1. **Evaluate the following contract agreement data:**
+{!$Flow:Get_Energy_Agreement_Data.Prompt}
+
+2. **From the following product and service catalog, recommend the most important products/services that address the issues you identified in the data. In addition to the primary product, also identify and include any related services (e.g., an installation service for a physical product). Do not recommend a product if there is no clear evidence for it.**
+ {!$Flow:Get_Non_commodity_Products_Services.Prompt}
+
+3. **Provide your final response as a short, concise, and scannable text output. Do not use long paragraphs or technical jargon. Follow this exact format:**. 
+ 
+Summary of Findings: [A single, high-level sentence summarizing the main problems identified.]
+Top Opportunities:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+Recommended Solutions:
+[Bullet point 1]
+[Bullet point 2]
+[Bullet point 3]
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>ServicePoint</apiName>
+            <definition>SOBJECT://ServicePoint</definition>
+            <masterLabel>ServicePoint</masterLabel>
+            <referenceName>Input:ServicePoint</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Get_Account_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Account_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Energy_Agreement_Data</definition>
+            <parameters>
+                <definition>SOBJECT://ServicePoint</definition>
+                <isRequired>true</isRequired>
+                <parameterName>ServicePoint</parameterName>
+                <valueExpression>{!$Input:ServicePoint}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Get_Energy_Agreement_Data</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://Get_Non_commodity_Products_Services</definition>
+            <referenceName>Flow:Get_Non_commodity_Products_Services</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>O+3DFz1HYg/Ri6AHMf7EzfHBODEuBz8EXg2WPR0S3sM=_2</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>
