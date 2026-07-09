@@ -22,9 +22,26 @@ public with sharing class DemoResetVisitAction {
             Result result = new Result();
 
             try {
-                // Query the Visit record
+                // Query the Visit record with all fields we need to clear
                 Visit visitRecord = [
-                    SELECT Id
+                    SELECT Id,
+                           Meal_Preparation_Evidence__c,
+                           Ambulation_Evidence__c,
+                           Domestic_Services_Evidence__c,
+                           Orientation_Evidence__c,
+                           Meal_Preparation_Proposed_Ranking__c,
+                           Ambulation_Proposed_Ranking__c,
+                           Domestic_Services_Proposed_Ranking__c,
+                           Orientation_Proposed_Ranking__c,
+                           Meal_Preparation_Proposed_Hours__c,
+                           Ambulation_Proposed_Hours__c,
+                           Domestic_Services_Proposed_Hours__c,
+                           Meal_Preparation_Is_Exception__c,
+                           Ambulation_Is_Exception__c,
+                           Domestic_Services_Is_Exception__c,
+                           Meal_Preparation_Justification__c,
+                           Ambulation_Justification__c,
+                           Domestic_Services_Justification__c
                     FROM Visit
                     WHERE Id = :request.visitId
                     LIMIT 1
