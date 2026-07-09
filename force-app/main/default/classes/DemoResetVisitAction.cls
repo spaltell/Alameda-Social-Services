@@ -64,10 +64,10 @@ public with sharing class DemoResetVisitAction {
                 visitRecord.Ambulation_Proposed_Hours__c = null;
                 visitRecord.Domestic_Services_Proposed_Hours__c = null;
 
-                // Clear all exception flags
-                visitRecord.Meal_Preparation_Is_Exception__c = null;
-                visitRecord.Ambulation_Is_Exception__c = null;
-                visitRecord.Domestic_Services_Is_Exception__c = null;
+                // Clear all exception flags (checkboxes must be false, not null)
+                visitRecord.Meal_Preparation_Is_Exception__c = false;
+                visitRecord.Ambulation_Is_Exception__c = false;
+                visitRecord.Domestic_Services_Is_Exception__c = false;
 
                 // Clear all justification fields
                 visitRecord.Meal_Preparation_Justification__c = null;
