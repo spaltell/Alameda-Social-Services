@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <description>Screen Flow to confirm and execute demo reset of all AI-generated Visit fields</description>
+    <interviewLabel>Demo Reset Visit Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Demo Reset Visit Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Confirmation_Screen</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+
+    <actionCalls>
+        <name>Reset_Fields</name>
+        <label>Reset Fields</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <actionName>DemoResetVisitAction</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>visitId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <connector>
+            <targetReference>Success_Screen</targetReference>
+        </connector>
+    </actionCalls>
+
+    <screens>
+        <name>Confirmation_Screen</name>
+        <label>Confirm Demo Reset</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Reset_Fields</targetReference>
+        </connector>
+        <fields>
+            <name>ConfirmationMessage</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(194, 57, 52); font-size: 14px;&quot;&gt;⚠️ Demo Reset&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;This will clear all AI-generated fields on this Visit record:&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Evidence Fields:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;• Meal Preparation Evidence&lt;/p&gt;&lt;p&gt;• Ambulation Evidence&lt;/p&gt;&lt;p&gt;• Domestic Services Evidence&lt;/p&gt;&lt;p&gt;• Orientation Evidence&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Assessment Fields:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;• All Proposed Rankings&lt;/p&gt;&lt;p&gt;• All Proposed Hours&lt;/p&gt;&lt;p&gt;• All Exception Flags&lt;/p&gt;&lt;p&gt;• All Justifications&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Click &lt;b&gt;Next&lt;/b&gt; to proceed with reset, or &lt;b&gt;Previous&lt;/b&gt; to cancel.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Success_Screen</name>
+        <label>Demo Reset Complete</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>SuccessMessage</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(8, 107, 45); font-size: 14px;&quot;&gt;✓ Demo Reset Complete&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;All AI-generated fields have been cleared. The Visit record is ready for a fresh demo.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;You can now:&lt;/p&gt;&lt;p&gt;1. Click &lt;b&gt;Save Notes&lt;/b&gt; to parse new dictation&lt;/p&gt;&lt;p&gt;2. Click &lt;b&gt;Generate Benefits Eligibility&lt;/b&gt; to analyze evidence&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+
+    <!-- Input Variable: recordId -->
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
