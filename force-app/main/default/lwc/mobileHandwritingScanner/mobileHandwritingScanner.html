@@ -1,0 +1,68 @@
+<template>
+    <lightning-card title="Scan Handwritten Notes" icon-name="standard:file">
+        <div class="slds-p-around_medium">
+            <template lwc:if={showUploader}>
+                <p class="slds-m-bottom_small">
+                    Upload a photo of handwritten notes. Einstein will transcribe it.
+                </p>
+                <lightning-file-upload
+                    label="Upload handwritten note"
+                    accept=".png,.jpg,.jpeg"
+                    record-id={recordId}
+                    onuploadfinished={handleUploadFinished}>
+                </lightning-file-upload>
+            </template>
+
+            <template lwc:if={uploadedFileName}>
+                <div class="slds-m-top_medium slds-box slds-theme_shade">
+                    <p><strong>Uploaded:</strong> {uploadedFileName}</p>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Transcribe with Einstein"
+                            variant="brand"
+                            icon-name="utility:einstein"
+                            onclick={handleTranscribe}
+                            disabled={isProcessing}>
+                        </lightning-button>
+                        <lightning-button
+                            label="Clear"
+                            variant="neutral"
+                            class="slds-m-left_x-small"
+                            onclick={handleClear}
+                            disabled={isProcessing}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={isProcessing}>
+                <div class="slds-m-top_medium">
+                    <lightning-spinner alternative-text="Processing..." size="small"></lightning-spinner>
+                    <p class="slds-text-align_center slds-m-top_small">{statusMessage}</p>
+                </div>
+            </template>
+
+            <template lwc:if={transcription}>
+                <div class="slds-m-top_medium slds-box">
+                    <p class="slds-text-heading_small slds-m-bottom_small">
+                        Transcription (review before filing):
+                    </p>
+                    <lightning-textarea
+                        label="Transcription"
+                        variant="label-hidden"
+                        value={transcription}
+                        onchange={handleEdit}
+                        class="slds-m-bottom_small">
+                    </lightning-textarea>
+                    <lightning-button
+                        label="Save to Visit Notes Dictation"
+                        variant="success"
+                        icon-name="utility:save"
+                        onclick={handleSave}
+                        disabled={isProcessing}>
+                    </lightning-button>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

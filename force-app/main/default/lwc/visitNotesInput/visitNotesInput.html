@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Visit Notes" icon-name="standard:note">
+        <div class="slds-p-around_medium">
+            <lightning-textarea
+                label="Add Notes"
+                placeholder="Type your visit notes here..."
+                value={noteText}
+                onchange={handleTextChange}
+                class="slds-m-bottom_small">
+            </lightning-textarea>
+            <lightning-button
+                label="Save Notes"
+                variant="brand"
+                icon-name="utility:save"
+                onclick={handleSave}
+                disabled={isSaving}
+                class="slds-m-top_small">
+            </lightning-button>
+            <template lwc:if={isSaving}>
+                <lightning-spinner alternative-text="Saving..." size="small"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

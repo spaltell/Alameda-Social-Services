@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Summarizes a grant ApplicationForm for a reviewer — applicant, program, amount requested, purpose, and current stage.</description>
+    <developerName>Grantmaking_Summarize_Application</developerName>
+    <masterLabel>Grantmaking Summarize Application</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are a grant review assistant. Summarize the following grant application in 3-5 sentences for a human reviewer.
+
+Application details:
+- Application number: {!$Input:Application.Name}
+- Title: {!$Input:Application.Title}
+- Current stage: {!$Input:Application.Stage}
+- Amount requested: {!$Input:Application.RequestedAmount}
+- Submission date: {!$Input:Application.SubmissionDate}
+- Purpose (from applicant): {!$Input:Application.Purpose}
+
+Focus on: who is applying, what they are requesting, why (stated purpose), and the current stage of the application. Be factual and concise. Do not make approval recommendations. Do not add information not present in the record.</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>Application</apiName>
+            <definition>SOBJECT://ApplicationForm</definition>
+            <masterLabel>Application</masterLabel>
+            <referenceName>Input:Application</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>YWJjMTIz_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

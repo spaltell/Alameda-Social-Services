@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>BsmCSwBx552IiskbG430rgAQIR+Rp+okWm82QYHVBps=_1</activeVersionIdentifier>
+    <description>Replaces Find Similar Complaints PSS OOTB prompt template. This version does not require Data Cloud.</description>
+    <developerName>GPS_Get_Similar_Resolved_Public_Complaints</developerName>
+    <masterLabel>GPS Get Similar Resolved Public Complaints</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>Analyze the Public Complaints returned by this flow: {!$Flow:GPS_Get_Resolved_Public_Complaints.Prompt}. Note the Subject field of each returned Public Complaint record.
+
+List records where some text in the Subject field exactly matches some text in the Subject field of this record: {!$Input:publicComplaint.Subject}
+
+For example, if the supplied Public Complaint has a Subject field with the words &quot;Car Theft&quot; in it, only return records that also have &quot;Car Theft&quot; in the Subject field. The records&apos; subject field must have some text in common.
+
+Format your response with &quot;Here are similar unresolved Public Complaints: &quot; followed by a comma-separated list of public complaint IDs.
+
+</content>
+        <inputs>
+            <apiName>publicComplaint</apiName>
+            <definition>SOBJECT://PublicComplaint</definition>
+            <masterLabel>publicComplaint</masterLabel>
+            <referenceName>Input:publicComplaint</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://GPS_Get_Resolved_Public_Complaints</definition>
+            <referenceName>Flow:GPS_Get_Resolved_Public_Complaints</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>BsmCSwBx552IiskbG430rgAQIR+Rp+okWm82QYHVBps=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

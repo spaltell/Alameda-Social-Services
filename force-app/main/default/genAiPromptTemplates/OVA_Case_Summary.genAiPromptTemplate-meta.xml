@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>OvaCaseSummaryV1Initial2026050501abcdefgh=_1</activeVersionIdentifier>
+    <developerName>OVA_Case_Summary</developerName>
+    <masterLabel>OVA Case Summary</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are a senior case analyst for the Massachusetts Office of the Veteran Advocate (OVA). A liaison needs a concise briefing so they can update leadership in under a minute.
+
+Case record (JSON):
+{!$Input:caseJSON}
+
+Case activity notes (JSON array, in chronological order — each entry has a date and a note):
+{!$Input:commentsJSON}
+
+Produce a summary in under 150 words using this exact structure:
+
+**Current status** — one sentence describing where the case stands today.
+
+**Key events** — 3 to 5 chronological bullets. Each bullet starts with the date in YYYY-MM-DD format, followed by one line describing what happened.
+
+**Outstanding items** — what is unresolved or pending, as a short bulleted list.
+
+**Recommended next step** — one specific action the liaison should take next, with a named owner if one can be inferred.
+
+Rules:
+- Use only facts present in the case record and activity notes. Do not invent names, dates, or outcomes.
+- If a section cannot be populated from the inputs, write the section header followed by &quot;Insufficient data in case record.&quot;
+- Never reveal the veteran&apos;s full address, date of birth, or medical diagnoses verbatim. Refer generally (for example, &quot;service-connected PTSD&quot;) rather than clinical detail.
+- Tone: neutral, factual, brief. No adjectives of emotion.
+- Do not send or suggest sending any external communication. Output is for the liaison&apos;s internal briefing only.
+</content>
+        <inputs>
+            <apiName>caseJSON</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>caseJSON</masterLabel>
+            <referenceName>Input:caseJSON</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>commentsJSON</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>commentsJSON</masterLabel>
+            <referenceName>Input:commentsJSON</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>OvaCaseSummaryV1Initial2026050501abcdefgh=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

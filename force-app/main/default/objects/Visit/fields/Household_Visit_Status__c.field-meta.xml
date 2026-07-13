@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Household_Visit_Status__c</fullName>
+    <description>Tracks the overall lifecycle of the household visit from scheduling through final approval</description>
+    <inlineHelpText>Current stage of the visit and documentation process. Update as you move through assessment, documentation, and approval steps.</inlineHelpText>
+    <label>Household Visit Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Scheduled</fullName>
+                <default>true</default>
+                <description>• Confirm household address and contact information
+• Review prior visit history and case notes
+• Prepare assessment forms and checklist
+• Schedule appointment with household member</description>
+                <label>Scheduled</label>
+            </value>
+            <value>
+                <fullName>Visit In Progress</fullName>
+                <default>false</default>
+                <description>• Conduct in-home functional assessment
+• Observe activities of daily living (ADLs)
+• Dictate or record visit notes
+• Scan any handwritten documentation
+• Document household conditions and safety concerns</description>
+                <label>Visit In Progress</label>
+            </value>
+            <value>
+                <fullName>Documentation Pending</fullName>
+                <default>false</default>
+                <description>• Generate draft narrative from visit notes
+• Review AI-generated functional rankings
+• Validate rankings against clinical observations
+• Complete all required assessment sections
+• Attach supporting documentation and photos</description>
+                <label>Documentation Pending</label>
+            </value>
+            <value>
+                <fullName>Under Review</fullName>
+                <default>false</default>
+                <description>• Senior social worker reviews narrative and rankings
+• Verify exception justifications are documented
+• Check for consistency between observations and hours
+• Approve or request revisions
+• Document supervisor approval decision</description>
+                <label>Under Review</label>
+            </value>
+            <value>
+                <fullName>Complete</fullName>
+                <default>false</default>
+                <description>• Finalized narrative approved by supervisor
+• Service authorization generated
+• Household notified of eligibility decision
+• Case file closed and ready for benefits processing
+• All documentation archived</description>
+                <label>Complete</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

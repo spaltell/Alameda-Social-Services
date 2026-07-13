@@ -41,7 +41,9 @@ public with sharing class DemoResetVisitAction {
                            Domestic_Services_Is_Exception__c,
                            Meal_Preparation_Justification__c,
                            Ambulation_Justification__c,
-                           Domestic_Services_Justification__c
+                           Domestic_Services_Justification__c,
+                           Draft_Narrative__c,
+                           Final_Narrative__c
                     FROM Visit
                     WHERE Id = :request.visitId
                     LIMIT 1
@@ -73,6 +75,10 @@ public with sharing class DemoResetVisitAction {
                 visitRecord.Meal_Preparation_Justification__c = null;
                 visitRecord.Ambulation_Justification__c = null;
                 visitRecord.Domestic_Services_Justification__c = null;
+
+                // Clear narrative fields
+                visitRecord.Draft_Narrative__c = null;
+                visitRecord.Final_Narrative__c = null;
 
                 // Update the record
                 update visitRecord;

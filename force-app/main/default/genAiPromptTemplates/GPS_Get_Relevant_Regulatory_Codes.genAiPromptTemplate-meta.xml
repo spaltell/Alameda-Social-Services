@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>BsmCSwBx552IiskbG430rgAQIR+Rp+okWm82QYHVBps=_1</activeVersionIdentifier>
+    <description>Gets the regulatory codes that could be violated by the incident reported in a complaint. This Prompt Template replicates the OOTB PSS one that requires Data Cloud.</description>
+    <developerName>GPS_Get_Relevant_Regulatory_Codes</developerName>
+    <masterLabel>GPS Get Relevant Regulatory Codes</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>Analyze the public complaint: {!$RecordSnapshot:publicComplaint.Snapshot}
+
+Analyze the Regulatory Codes returned by the following flow: {!$Flow:GPS_Get_Regulatory_Codes.Prompt}
+
+Identify unique regulatory codes that could be violated by the incident reported in the public complaint passed as input. Be sure to only return regulatory codes that are explicityly relevant to the Public Complaint. Respond with the RegulatoryCodeIds of the identified regulatory codes. Include the name of the Public Complaint.
+
+</content>
+        <inputs>
+            <apiName>publicComplaint</apiName>
+            <definition>SOBJECT://PublicComplaint</definition>
+            <masterLabel>publicComplaint</masterLabel>
+            <referenceName>Input:publicComplaint</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getDataForGrounding</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>recordId</parameterName>
+                <valueExpression>{!$Input:publicComplaint.Id}</valueExpression>
+            </parameters>
+            <referenceName>RecordSnapshot:publicComplaint</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>flow://GPS_Get_Regulatory_Codes</definition>
+            <referenceName>Flow:GPS_Get_Regulatory_Codes</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>BsmCSwBx552IiskbG430rgAQIR+Rp+okWm82QYHVBps=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>OVAFileSummaryV1_1</activeVersionIdentifier>
+    <developerName>OVA_File_Summary</developerName>
+    <masterLabel>OVA File Summary</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are an assistant for the Massachusetts Office of the Veteran Advocate (OVA) liaison team.
+
+A liaison has uploaded a document titled &quot;{!$Input:documentTitle}&quot; for review.
+
+Document content:
+{!$Input:documentContent}
+
+Please analyze the content above and provide:
+
+1. A 3-5 sentence plain-language summary of this document
+2. Key topics or action items (bulleted list, max 5 items)
+3. Document type classification — choose one: Memorandum / Policy / Event Flyer / Correspondence / Report / Other
+
+Keep the tone professional and concise. Format your response clearly with labeled sections. This summary is for internal OVA liaison use only.</content>
+        <inputs>
+            <apiName>documentTitle</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Document Title</masterLabel>
+            <referenceName>Input:documentTitle</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>documentContent</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Document Content</masterLabel>
+            <referenceName>Input:documentContent</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>OVAFileSummaryV1_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

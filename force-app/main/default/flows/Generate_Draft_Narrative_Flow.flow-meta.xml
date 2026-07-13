@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>66.0</apiVersion>
-    <description>Invokes the Generate Visit Rankings and Justifications Apex Action</description>
-    <interviewLabel>Generate Visit Rankings Flow {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Generate Visit Rankings Flow</label>
+    <description>Calls DraftVisitNarrativeAction to generate a draft narrative and saves it to the Draft_Narrative__c field</description>
+    <interviewLabel>Generate Draft Narrative Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Generate Draft Narrative Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -27,16 +27,16 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Generate_Rankings</targetReference>
+            <targetReference>Draft_Narrative_Action</targetReference>
         </connector>
     </start>
     <status>Active</status>
     <actionCalls>
-        <name>Generate_Rankings</name>
-        <label>Generate Rankings</label>
+        <name>Draft_Narrative_Action</name>
+        <label>Draft Narrative Action</label>
         <locationX>176</locationX>
         <locationY>134</locationY>
-        <actionName>GenerateVisitRankingsAction</actionName>
+        <actionName>DraftVisitNarrativeAction</actionName>
         <actionType>apex</actionType>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
@@ -47,61 +47,85 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
         <connector>
-            <targetReference>Check_For_Exceptions</targetReference>
+            <targetReference>Check_Success</targetReference>
         </connector>
     </actionCalls>
     <decisions>
-        <name>Check_For_Exceptions</name>
-        <label>Check For Exceptions</label>
+        <name>Check_Success</name>
+        <label>Check Success</label>
         <locationX>176</locationX>
         <locationY>242</locationY>
         <defaultConnector>
-            <targetReference>Success_Screen</targetReference>
+            <targetReference>Error_Screen</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>No Exceptions</defaultConnectorLabel>
+        <defaultConnectorLabel>Error</defaultConnectorLabel>
         <rules>
-            <name>Has_Exceptions</name>
+            <name>Success</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Generate_Rankings.exceptionsDetected</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <leftValueReference>Draft_Narrative_Action.success</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>None</stringValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Exception_Warning_Screen</targetReference>
+                <targetReference>Save_Draft_Narrative</targetReference>
             </connector>
-            <label>Has Exceptions</label>
+            <label>Success</label>
         </rules>
     </decisions>
-    <screens>
-        <name>Exception_Warning_Screen</name>
-        <label>Exceptions Detected</label>
+    <recordUpdates>
+        <name>Save_Draft_Narrative</name>
+        <label>Save Draft Narrative</label>
         <locationX>50</locationX>
         <locationY>350</locationY>
+        <connector>
+            <targetReference>Success_Screen</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Draft_Narrative__c</field>
+            <value>
+                <elementReference>Draft_Narrative_Action.narrative</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Visit</object>
+    </recordUpdates>
+    <screens>
+        <name>Success_Screen</name>
+        <label>Success</label>
+        <locationX>50</locationX>
+        <locationY>458</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
-            <name>ExceptionWarning</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(194, 57, 52); font-size: 14px;&quot;&gt;⚠️ Exceptions Detected&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;The following categories have hours outside state-mandated ranges:&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin-left: 20px;&quot;&gt;&lt;b style=&quot;font-size: 13px;&quot;&gt;• {!Generate_Rankings.exceptionsDetected}&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Please review the proposed rankings, hours, and justifications on the Visit record. The exception checkboxes have been flagged for supervisor review.&lt;/p&gt;</fieldText>
+            <name>SuccessMessage</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(8, 107, 45); font-size: 14px;&quot;&gt;✓ Draft Narrative Generated&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;The draft narrative has been saved to the Draft Narrative field. You can review and edit it on the Visit record before finalizing.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
     <screens>
-        <name>Success_Screen</name>
-        <label>Success</label>
+        <name>Error_Screen</name>
+        <label>Error</label>
         <locationX>302</locationX>
         <locationY>350</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
-            <name>SuccessMessage</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(8, 107, 45); font-size: 14px;&quot;&gt;✓ Rankings Generated&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Preliminary rankings, hours, and justifications have been assigned. Review the proposed values below and approve or override as needed.&lt;/p&gt;</fieldText>
+            <name>ErrorMessage</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(194, 57, 52); font-size: 14px;&quot;&gt;⚠️ Error&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!Draft_Narrative_Action.message}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
