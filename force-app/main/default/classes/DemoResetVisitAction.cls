@@ -22,7 +22,7 @@ public with sharing class DemoResetVisitAction {
             Result result = new Result();
 
             try {
-                // Query the Visit record with all fields we need to clear
+                // Query the Visit record with all fields we need to clear (preserving Visit_Notes_Dictation__c)
                 Visit visitRecord = [
                     SELECT Id,
                            Meal_Preparation_Evidence__c,
@@ -42,8 +42,19 @@ public with sharing class DemoResetVisitAction {
                            Meal_Preparation_Justification__c,
                            Ambulation_Justification__c,
                            Domestic_Services_Justification__c,
+                           Meal_Preparation_Approved_Ranking__c,
+                           Ambulation_Approved_Ranking__c,
+                           Domestic_Services_Approved_Ranking__c,
+                           Orientation_Approved_Ranking__c,
                            Draft_Narrative__c,
-                           Final_Narrative__c
+                           Final_Narrative__c,
+                           Household_Visit_Status__c,
+                           Narrative_Status__c,
+                           Report_Status__c,
+                           Overall_Risk_Level__c,
+                           Highest_Need_Category__c,
+                           Submitted_For_Review_Date__c,
+                           Worker_Approval_Date__c
                     FROM Visit
                     WHERE Id = :request.visitId
                     LIMIT 1
@@ -55,11 +66,17 @@ public with sharing class DemoResetVisitAction {
                 visitRecord.Domestic_Services_Evidence__c = null;
                 visitRecord.Orientation_Evidence__c = null;
 
-                // Clear all ranking fields
+                // Clear all proposed ranking fields
                 visitRecord.Meal_Preparation_Proposed_Ranking__c = null;
                 visitRecord.Ambulation_Proposed_Ranking__c = null;
                 visitRecord.Domestic_Services_Proposed_Ranking__c = null;
                 visitRecord.Orientation_Proposed_Ranking__c = null;
+
+                // Clear all approved ranking fields
+                visitRecord.Meal_Preparation_Approved_Ranking__c = null;
+                visitRecord.Ambulation_Approved_Ranking__c = null;
+                visitRecord.Domestic_Services_Approved_Ranking__c = null;
+                visitRecord.Orientation_Approved_Ranking__c = null;
 
                 // Clear all hours fields
                 visitRecord.Meal_Preparation_Proposed_Hours__c = null;
@@ -79,6 +96,19 @@ public with sharing class DemoResetVisitAction {
                 // Clear narrative fields
                 visitRecord.Draft_Narrative__c = null;
                 visitRecord.Final_Narrative__c = null;
+
+                // Clear risk and category fields
+                visitRecord.Overall_Risk_Level__c = null;
+                visitRecord.Highest_Need_Category__c = null;
+
+                // Clear status fields and reset Household Visit Status to Scheduled
+                visitRecord.Household_Visit_Status__c = 'Scheduled';
+                visitRecord.Narrative_Status__c = null;
+                visitRecord.Report_Status__c = null;
+
+                // Clear date stamps
+                visitRecord.Submitted_For_Review_Date__c = null;
+                visitRecord.Worker_Approval_Date__c = null;
 
                 // Update the record
                 update visitRecord;

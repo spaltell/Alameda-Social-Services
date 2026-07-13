@@ -194,7 +194,7 @@
         <inputAssignments>
             <field>Final_Narrative__c</field>
             <value>
-                <elementReference>Final_Narrative</elementReference>
+                <elementReference>Get_Visit.Draft_Narrative__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -354,12 +354,8 @@
         </fields>
         <fields>
             <name>Final_Narrative</name>
-            <defaultValue>
-                <elementReference>Get_Visit.Draft_Narrative__c</elementReference>
-            </defaultValue>
-            <fieldText>Final Narrative</fieldText>
-            <fieldType>LargeTextArea</fieldType>
-            <isRequired>true</isRequired>
+            <fieldText>&lt;p&gt;&lt;b&gt;Final Narrative&lt;/b&gt;&lt;/p&gt;{!Get_Visit.Draft_Narrative__c}</fieldText>
+            <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
                     <stringValue>top</stringValue>
