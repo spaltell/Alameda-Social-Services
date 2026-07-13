@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alameda County IHSS - AI-Powered Case Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .slides {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h3 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .pain-points {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin-top: 2rem;
+        }
+
+        .pain-point {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pain-point:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .pain-point h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .pain-point p {
+            font-size: 1.3rem;
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 6rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 2rem;
+            opacity: 0.9;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin-top: 2rem;
+        }
+
+        .solution-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .solution-card:hover {
+            transform: scale(1.05);
+        }
+
+        .solution-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .solution-card p {
+            font-size: 1.2rem;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin-top: 2rem;
+        }
+
+        .impact-stat {
+            text-align: center;
+        }
+
+        .impact-number {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #4ade80;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .impact-label {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            text-align: left;
+            max-width: 900px;
+            font-size: 1.4rem;
+            line-height: 2;
+        }
+
+        ul li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+
+        .demo-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin-top: 2rem;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem 2rem;
+            border-left: 5px solid #4ade80;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .step-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #4ade80;
+            min-width: 60px;
+        }
+
+        .step-content h3 {
+            font-size: 1.6rem;
+            text-align: left;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 1.2rem;
+            text-align: left;
+            margin: 0;
+        }
+
+        .logo {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">Alameda County IHSS</div>
+
+    <div class="slides">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Transforming Case Management</h1>
+            <p class="subtitle">AI-Powered Automation for Alameda County IHSS</p>
+            <p style="margin-top: 3rem; font-size: 1.3rem; opacity: 0.8;">Reducing backlog, accelerating compliance, and empowering caseworkers</p>
+        </div>
+
+        <!-- Slide 2: The Challenge -->
+        <div class="slide">
+            <h2>The Challenge</h2>
+            <div style="display: flex; gap: 4rem; margin-top: 3rem;">
+                <div style="text-align: center;">
+                    <div class="stat-number">500</div>
+                    <div class="stat-label">Cases in Backlog</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="stat-number">400</div>
+                    <div class="stat-label">People Waiting</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Cases per Day</div>
+                </div>
+            </div>
+            <p style="margin-top: 3rem; font-size: 1.8rem; color: #ffd700;">Out of compliance with the state</p>
+        </div>
+
+        <!-- Slide 3: Pain Points -->
+        <div class="slide">
+            <h2>Current Pain Points</h2>
+            <div class="pain-points">
+                <div class="pain-point">
+                    <h3>⏱️ Time-Consuming Documentation</h3>
+                    <p>2+ hours per visit, with extensive manual note-taking and narrative creation slowing down case completion</p>
+                </div>
+                <div class="pain-point">
+                    <h3>📝 Manual Ranking Process</h3>
+                    <p>Social workers manually determine and justify rankings for each service need without automated support</p>
+                </div>
+                <div class="pain-point">
+                    <h3>🔄 No State System API</h3>
+                    <p>Copy-paste workflow into web-based state system creates double entry and delays</p>
+                </div>
+                <div class="pain-point">
+                    <h3>📚 Limited Policy Access</h3>
+                    <p>Finding regulatory thresholds and citations requires searching through dense policy documents</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: The Root Issue -->
+        <div class="slide">
+            <h2>The Root Issue</h2>
+            <p style="font-size: 2rem; margin-top: 2rem;">Creating narratives with proper rankings and citations is the bottleneck</p>
+            <div style="margin-top: 3rem; background: rgba(255, 255, 255, 0.15); padding: 2rem; border-radius: 1rem; max-width: 1000px;">
+                <h3 style="color: #ffd700; margin-bottom: 1.5rem;">The Question</h3>
+                <p style="font-size: 1.8rem;">"How do we help caseworkers complete more visits per day so we can tackle the backlog faster?"</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: The Solution -->
+        <div class="slide">
+            <h2>AI-Powered Solution</h2>
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <div class="icon">🎙️</div>
+                    <h3>Voice-to-Text</h3>
+                    <p>Paste dictation directly into visit records — no manual typing</p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">✍️</div>
+                    <h3>Handwritten Notes</h3>
+                    <p>Scan and transcribe handwritten field notes instantly</p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">🤖</div>
+                    <h3>Smart Parsing</h3>
+                    <p>AI extracts rankings, hours, and observations from unstructured text</p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">📊</div>
+                    <h3>Auto Rankings</h3>
+                    <p>AI suggests rankings with regulatory citations and evidence</p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">📝</div>
+                    <h3>Narrative Generation</h3>
+                    <p>One-click narrative creation from visit data with proper formatting</p>
+                </div>
+                <div class="solution-card">
+                    <div class="icon">💬</div>
+                    <h3>IHSS Agent</h3>
+                    <p>Ask policy questions, check backlog, find missing rankings instantly</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Key Features -->
+        <div class="slide">
+            <h2>Key Features</h2>
+            <ul style="margin-top: 2rem;">
+                <li>Mobile-first design for field visits</li>
+                <li>Real-time handwritten note transcription</li>
+                <li>Intelligent text parsing for benefits eligibility</li>
+                <li>Automated ranking suggestions with citations</li>
+                <li>One-click narrative generation</li>
+                <li>Conversational AI agent for policy questions</li>
+                <li>Backlog management and prioritization</li>
+                <li>Visit status tracking with Path component</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Demo Flow -->
+        <div class="slide">
+            <h2>Demo Walkthrough</h2>
+            <div class="demo-flow">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Home Page</h3>
+                        <p>View prioritized visit list and household profiles</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Mobile Visit</h3>
+                        <p>Capture visit notes and scan handwritten observations in the field</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Parse & Generate</h3>
+                        <p>Paste dictation, parse data, and generate benefits eligibility</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>AI Agent Assistance</h3>
+                        <p>Ask IHSS agent about exception thresholds and policy questions</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Finalize & Submit</h3>
+                        <p>Review narrative, approve rankings, and complete the visit workflow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Expected Impact -->
+        <div class="slide">
+            <h2>Expected Impact</h2>
+            <div class="impact-grid">
+                <div class="impact-stat">
+                    <div class="impact-number">60%</div>
+                    <div class="impact-label">Time Savings per Visit</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="impact-number">5-7</div>
+                    <div class="impact-label">Cases per Day</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="impact-number">2-3x</div>
+                    <div class="impact-label">Backlog Reduction Speed</div>
+                </div>
+            </div>
+            <p style="margin-top: 3rem; font-size: 1.8rem;">From 3 cases per day to 5-7 cases per day</p>
+            <p style="font-size: 1.5rem; opacity: 0.9;">Faster compliance, better outcomes for households in need</p>
+        </div>
+
+        <!-- Slide 9: Call to Action -->
+        <div class="slide">
+            <h1>Let's See It In Action</h1>
+            <p class="subtitle" style="margin-top: 2rem;">Live demonstration of the complete case management workflow</p>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">9</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
