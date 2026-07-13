@@ -1,6 +1,28 @@
 <template>
-    <lightning-card title="Household Profile" icon-name="custom:custom63">
-        <div class="slds-card__body slds-card__body_inner">
+    <lightning-card icon-name="standard:account">
+        <div slot="title">
+            <div class="slds-media slds-media_center">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-account">
+                        <lightning-icon icon-name="standard:home" size="small"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_small">Household Profile</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button label="Create Visit" onclick={handleCreateVisit} variant="brand"></lightning-button>
+                <lightning-button label="View All" onclick={handleViewAllVisits}></lightning-button>
+            </lightning-button-group>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner slds-p-around_medium">
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading household profile" size="small"></lightning-spinner>
             </template>
@@ -8,97 +30,102 @@
             <template if:false={isLoading}>
                 <!-- Alert Badges -->
                 <template if:true={showOverdueAlert}>
-                    <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_small" role="alert">
-                        <span class="slds-assistive-text">warning</span>
-                        <h2>
-                            <lightning-icon icon-name="utility:warning" alternative-text="Warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
-                            Overdue Visit: {daysSinceLastVisit} days since last visit
-                        </h2>
+                    <div class="alert-banner alert-warning slds-m-bottom_medium">
+                        <lightning-icon icon-name="utility:warning" alternative-text="Warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <span class="alert-text"><strong>Overdue Visit:</strong> {daysSinceLastVisit} days since last visit</span>
                     </div>
                 </template>
 
                 <template if:true={showPendingExceptionAlert}>
-                    <div class="slds-notify slds-notify_alert slds-alert_info slds-m-bottom_small" role="alert">
-                        <span class="slds-assistive-text">info</span>
-                        <h2>
-                            <lightning-icon icon-name="utility:info" alternative-text="Info" size="x-small" class="slds-m-right_x-small"></lightning-icon>
-                            Pending exceptions under review
-                        </h2>
+                    <div class="alert-banner alert-info slds-m-bottom_medium">
+                        <lightning-icon icon-name="utility:info" alternative-text="Info" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <span class="alert-text">Pending exceptions under review</span>
                     </div>
                 </template>
 
-                <!-- Last Visit Summary -->
                 <template if:true={hasVisits}>
-                    <div class="slds-box slds-box_x-small slds-m-bottom_small">
-                        <div class="slds-grid slds-wrap slds-gutters_small">
-                            <div class="slds-col slds-size_1-of-1">
-                                <p class="slds-text-heading_small slds-m-bottom_x-small">Last Visit</p>
-                                <p class="slds-text-body_regular slds-m-bottom_xx-small">
-                                    <lightning-formatted-date-time value={mostRecentVisit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
-                                    <span class="slds-text-color_weak"> ({daysSinceLastVisit} days ago)</span>
-                                </p>
-                                <template if:true={mostRecentVisit.riskLevel}>
-                                    <span class={riskLevelClass}>
-                                        Risk: {mostRecentVisit.riskLevel}
-                                    </span>
-                                </template>
+                    <!-- Last Visit & Authorized Hours Grid -->
+                    <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                        <!-- Last Visit Summary -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="info-card">
+                                <div class="info-card__header">
+                                    <lightning-icon icon-name="utility:event" size="x-small" class="slds-m-right_x-small icon-accent"></lightning-icon>
+                                    <span class="info-card__title">Last Visit</span>
+                                </div>
+                                <div class="info-card__body">
+                                    <div class="stat-primary">
+                                        <lightning-formatted-date-time value={mostRecentVisit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
+                                    </div>
+                                    <div class="stat-secondary">
+                                        {daysSinceLastVisit} days ago
+                                    </div>
+                                    <template if:true={mostRecentVisit.riskLevel}>
+                                        <div class="slds-m-top_x-small">
+                                            <span class={riskLevelBadgeClass}>
+                                                {mostRecentVisit.riskLevel}
+                                            </span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Authorized Hours -->
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="info-card">
+                                <div class="info-card__header">
+                                    <lightning-icon icon-name="utility:clock" size="x-small" class="slds-m-right_x-small icon-accent"></lightning-icon>
+                                    <span class="info-card__title">Authorized Hours</span>
+                                </div>
+                                <div class="info-card__body">
+                                    <template if:true={hasAuthorizedHours}>
+                                        <div class="stat-primary slds-m-bottom_x-small">{totalHours} hrs/week</div>
+                                        <div class="hours-breakdown">
+                                            <template for:each={authorizedHours} for:item="hour">
+                                                <div key={hour.label} class="hours-item">
+                                                    <span class="hours-label">{hour.label}</span>
+                                                    <span class="hours-value">{hour.value} hrs</span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:false={hasAuthorizedHours}>
+                                        <div class="stat-secondary">No hours authorized</div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Authorized Hours -->
-                    <div class="slds-box slds-box_x-small slds-m-bottom_small">
-                        <p class="slds-text-heading_small slds-m-bottom_x-small">
-                            Authorized Hours
-                            <span class="slds-text-body_regular slds-text-color_weak"> (Total: {totalHours})</span>
-                        </p>
-                        <template if:true={hasAuthorizedHours}>
-                            <ul class="slds-list_dotted">
-                                <template for:each={authorizedHours} for:item="hour">
-                                    <li key={hour.label}>
-                                        {hour.label}: <strong>{hour.value} hrs/week</strong>
-                                    </li>
-                                </template>
-                            </ul>
-                        </template>
-                        <template if:false={hasAuthorizedHours}>
-                            <p class="slds-text-color_weak">No hours authorized</p>
-                        </template>
+                    <!-- Recent Visits -->
+                    <div class="section-header slds-m-bottom_small">
+                        <lightning-icon icon-name="utility:file" size="x-small" class="slds-m-right_x-small icon-accent"></lightning-icon>
+                        <span class="section-title">Recent Visits</span>
                     </div>
 
-                    <!-- Recent Visits -->
-                    <p class="slds-text-heading_small slds-m-bottom_x-small">Recent Visits</p>
-                    <ul class="slds-has-dividers_bottom-space">
+                    <div class="visits-list">
                         <template for:each={visitHistory.recentVisits} for:item="visit">
-                            <li key={visit.id} class="slds-item">
-                                <article class="slds-tile slds-tile_board slds-cursor_pointer" data-id={visit.id} onclick={navigateToVisit}>
-                                    <div class="slds-tile__detail">
-                                        <p class="slds-truncate" title={visit.name}>
-                                            <strong>{visit.name}</strong>
-                                        </p>
-                                        <div class="slds-tile__detail">
-                                            <dl class="slds-list_horizontal slds-wrap">
-                                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Status">Status:</dt>
-                                                <dd class="slds-item_detail slds-truncate" title={visit.householdVisitStatus}>
-                                                    <span class="slds-badge">{visit.householdVisitStatus}</span>
-                                                </dd>
-                                                <dt class="slds-item_label slds-text-color_weak slds-truncate slds-m-left_small" title="Date">Date:</dt>
-                                                <dd class="slds-item_detail slds-truncate">
-                                                    <lightning-formatted-date-time value={visit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
-                                                </dd>
-                                            </dl>
-                                        </div>
-                                    </div>
-                                </article>
-                            </li>
+                            <div key={visit.id} class="visit-card" data-id={visit.id} onclick={navigateToVisit}>
+                                <div class="visit-card__header">
+                                    <span class="visit-number">{visit.name}</span>
+                                    <span class={visit.statusClass}>{visit.householdVisitStatus}</span>
+                                </div>
+                                <div class="visit-card__meta">
+                                    <span class="visit-date">
+                                        <lightning-icon icon-name="utility:date_time" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                        <lightning-formatted-date-time value={visit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
+                                    </span>
+                                </div>
+                            </div>
                         </template>
-                    </ul>
+                    </div>
                 </template>
 
                 <template if:false={hasVisits}>
-                    <div class="slds-text-align_center slds-m-vertical_medium">
-                        <lightning-icon icon-name="utility:info" alternative-text="No visits" size="small" class="slds-m-bottom_small"></lightning-icon>
-                        <p class="slds-text-color_weak">No visits recorded for this household</p>
+                    <div class="empty-state">
+                        <lightning-icon icon-name="utility:info" alternative-text="No visits" size="small" class="empty-state__icon"></lightning-icon>
+                        <p class="empty-state__text">No visits recorded for this household</p>
                     </div>
                 </template>
 
@@ -108,13 +135,6 @@
                     </div>
                 </template>
             </template>
-        </div>
-
-        <div slot="actions">
-            <lightning-button-group>
-                <lightning-button label="Create Visit" onclick={handleCreateVisit} variant="brand"></lightning-button>
-                <lightning-button label="View All" onclick={handleViewAllVisits}></lightning-button>
-            </lightning-button-group>
         </div>
     </lightning-card>
 </template>

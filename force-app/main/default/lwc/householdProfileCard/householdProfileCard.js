@@ -26,7 +26,15 @@ export default class HouseholdProfileCard extends NavigationMixin(LightningEleme
     wiredVisits({ error, data }) {
         this.isLoading = true;
         if (data) {
-            this.visitHistory = data;
+            // Create new object with enhanced visits (wire data is immutable)
+            const enhancedData = {
+                ...data,
+                recentVisits: data.recentVisits ? data.recentVisits.map(visit => ({
+                    ...visit,
+                    statusClass: this.getStatusClass(visit.householdVisitStatus)
+                })) : []
+            };
+            this.visitHistory = enhancedData;
             this.error = undefined;
             this.isLoading = false;
         } else if (error) {
@@ -35,6 +43,12 @@ export default class HouseholdProfileCard extends NavigationMixin(LightningEleme
             this.isLoading = false;
             console.error('Error loading visit history:', error);
         }
+    }
+
+    getStatusClass(status) {
+        if (!status) return 'visit-status';
+        const normalized = status.toLowerCase().replace(/\s+/g, '-');
+        return `visit-status status-${normalized}`;
     }
 
     get hasVisits() {
@@ -49,6 +63,12 @@ export default class HouseholdProfileCard extends NavigationMixin(LightningEleme
         if (!this.mostRecentVisit || !this.mostRecentVisit.riskLevel) return '';
         const risk = this.mostRecentVisit.riskLevel.toLowerCase();
         return `slds-badge risk-${risk}`;
+    }
+
+    get riskLevelBadgeClass() {
+        if (!this.mostRecentVisit || !this.mostRecentVisit.riskLevel) return 'risk-badge';
+        const risk = this.mostRecentVisit.riskLevel.toLowerCase();
+        return `risk-badge risk-badge-${risk}`;
     }
 
     get showOverdueAlert() {

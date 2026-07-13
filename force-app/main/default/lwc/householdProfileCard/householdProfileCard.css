@@ -1,27 +1,243 @@
-.risk-low {
+/* Alert Banners */
+.alert-banner {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.alert-warning {
+    background-color: #fef7e6;
+    border-left: 4px solid #fe9339;
+    color: #4a3c2c;
+}
+
+.alert-info {
+    background-color: #e3f3ff;
+    border-left: 4px solid #0176d3;
+    color: #001639;
+}
+
+.alert-text {
+    line-height: 1.5;
+}
+
+/* Info Cards */
+.info-card {
+    background-color: #f3f3f3;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 100%;
+    transition: all 0.15s ease-in-out;
+}
+
+.info-card:hover {
+    background-color: #ecebea;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+}
+
+.info-card__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dddbda;
+}
+
+.info-card__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.025rem;
+    color: #706e6b;
+}
+
+.info-card__body {
+    color: #3e3e3c;
+}
+
+.icon-accent {
+    color: #0176d3;
+}
+
+/* Stats */
+.stat-primary {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #080707;
+    line-height: 1.25;
+}
+
+.stat-secondary {
+    font-size: 0.875rem;
+    color: #706e6b;
+    margin-top: 0.25rem;
+}
+
+/* Risk Level Badges */
+.risk-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025rem;
+}
+
+.risk-badge-low {
     background-color: #04844b;
     color: white;
 }
 
-.risk-medium {
+.risk-badge-medium {
     background-color: #fe9339;
     color: white;
 }
 
-.risk-high {
+.risk-badge-high {
     background-color: #ea001e;
     color: white;
 }
 
-.risk-critical {
+.risk-badge-critical {
     background-color: #8b0000;
     color: white;
 }
 
-.slds-cursor_pointer {
-    cursor: pointer;
+/* Hours Breakdown */
+.hours-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
 }
 
-.slds-cursor_pointer:hover {
-    background-color: var(--slds-g-color-neutral-base-95, #f3f2f2);
+.hours-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+    font-size: 0.8125rem;
+}
+
+.hours-label {
+    color: #706e6b;
+}
+
+.hours-value {
+    font-weight: 600;
+    color: #080707;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dddbda;
+}
+
+.section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.025rem;
+    color: #3e3e3c;
+}
+
+/* Visits List */
+.visits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.visit-card {
+    background-color: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.visit-card:hover {
+    border-color: #0176d3;
+    box-shadow: 0 2px 8px rgba(1, 118, 211, 0.15);
+    transform: translateY(-1px);
+}
+
+.visit-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.375rem;
+}
+
+.visit-number {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #080707;
+}
+
+.visit-status {
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-scheduled {
+    background-color: #e3f3ff;
+    color: #014486;
+}
+
+.status-in-progress {
+    background-color: #fef7e6;
+    color: #4a3c2c;
+}
+
+.status-pending {
+    background-color: #fef7e6;
+    color: #4a3c2c;
+}
+
+.status-under-review {
+    background-color: #ffe8d9;
+    color: #4a3c2c;
+}
+
+.status-completed {
+    background-color: #d8f8e7;
+    color: #194f33;
+}
+
+.visit-card__meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: #706e6b;
+}
+
+.visit-date {
+    display: flex;
+    align-items: center;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.empty-state__icon {
+    margin-bottom: 0.75rem;
+    color: #c9c7c5;
+}
+
+.empty-state__text {
+    color: #706e6b;
+    font-size: 0.875rem;
 }
