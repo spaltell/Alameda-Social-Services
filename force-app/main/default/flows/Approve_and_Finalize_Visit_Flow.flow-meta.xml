@@ -22,6 +22,70 @@
     </actionCalls>
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <choices>
+        <name>Risk_Level_Low</name>
+        <choiceText>Low</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Low</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Risk_Level_Medium</name>
+        <choiceText>Medium</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Medium</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Risk_Level_High</name>
+        <choiceText>High</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>High</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Risk_Level_Critical</name>
+        <choiceText>Critical</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Critical</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Category_Meal_Preparation</name>
+        <choiceText>Meal Preparation</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Meal Preparation</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Category_Ambulation</name>
+        <choiceText>Ambulation</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Ambulation</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Category_Domestic_Services</name>
+        <choiceText>Domestic Services</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Domestic Services</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Category_Orientation</name>
+        <choiceText>Orientation</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Orientation</stringValue>
+        </value>
+    </choices>
     <decisions>
         <name>Attestation_Check</name>
         <label>Attestation Check</label>
@@ -90,6 +154,13 @@
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Visit</object>
         <queriedFields>Draft_Narrative__c</queriedFields>
+        <queriedFields>Meal_Preparation_Proposed_Ranking__c</queriedFields>
+        <queriedFields>Meal_Preparation_Proposed_Hours__c</queriedFields>
+        <queriedFields>Ambulation_Proposed_Ranking__c</queriedFields>
+        <queriedFields>Ambulation_Proposed_Hours__c</queriedFields>
+        <queriedFields>Domestic_Services_Proposed_Ranking__c</queriedFields>
+        <queriedFields>Domestic_Services_Proposed_Hours__c</queriedFields>
+        <queriedFields>Orientation_Proposed_Ranking__c</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
@@ -127,15 +198,45 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Highest_Need_Category__c</field>
+            <value>
+                <elementReference>Highest_Need_Category</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Household_Visit_Status__c</field>
+            <value>
+                <stringValue>Under Review</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Meal_Preparation_Approved_Ranking__c</field>
             <value>
                 <elementReference>Get_Visit.Meal_Preparation_Proposed_Ranking__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Narrative_Status__c</field>
+            <value>
+                <stringValue>Submitted</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Orientation_Approved_Ranking__c</field>
             <value>
                 <elementReference>Get_Visit.Orientation_Proposed_Ranking__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Overall_Risk_Level__c</field>
+            <value>
+                <elementReference>Overall_Risk_Level</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Report_Status__c</field>
+            <value>
+                <stringValue>Submitted</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -212,6 +313,44 @@
                     <stringValue>12</stringValue>
                 </width>
             </styleProperties>
+        </fields>
+        <fields>
+            <name>Overall_Risk_Level</name>
+            <dataType>String</dataType>
+            <fieldText>Overall Risk Level</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>6</stringValue>
+                </width>
+            </styleProperties>
+            <choiceReferences>Risk_Level_Low</choiceReferences>
+            <choiceReferences>Risk_Level_Medium</choiceReferences>
+            <choiceReferences>Risk_Level_High</choiceReferences>
+            <choiceReferences>Risk_Level_Critical</choiceReferences>
+        </fields>
+        <fields>
+            <name>Highest_Need_Category</name>
+            <dataType>String</dataType>
+            <fieldText>Highest Need Category</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>6</stringValue>
+                </width>
+            </styleProperties>
+            <choiceReferences>Category_Meal_Preparation</choiceReferences>
+            <choiceReferences>Category_Ambulation</choiceReferences>
+            <choiceReferences>Category_Domestic_Services</choiceReferences>
+            <choiceReferences>Category_Orientation</choiceReferences>
         </fields>
         <fields>
             <name>Final_Narrative</name>
