@@ -1,0 +1,9 @@
+.slds-cursor_pointer {
+    cursor: pointer;
+    color: var(--slds-g-color-brand-base-60, #0176d3);
+    text-decoration: none;
+}
+
+.slds-cursor_pointer:hover {
+    text-decoration: underline;
+}

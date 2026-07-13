@@ -1,0 +1,27 @@
+.risk-low {
+    background-color: #04844b;
+    color: white;
+}
+
+.risk-medium {
+    background-color: #fe9339;
+    color: white;
+}
+
+.risk-high {
+    background-color: #ea001e;
+    color: white;
+}
+
+.risk-critical {
+    background-color: #8b0000;
+    color: white;
+}
+
+.slds-cursor_pointer {
+    cursor: pointer;
+}
+
+.slds-cursor_pointer:hover {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f2f2);
+}

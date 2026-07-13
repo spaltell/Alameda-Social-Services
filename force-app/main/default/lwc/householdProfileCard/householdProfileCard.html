@@ -1,0 +1,120 @@
+<template>
+    <lightning-card title="Household Profile" icon-name="custom:custom63">
+        <div class="slds-card__body slds-card__body_inner">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading household profile" size="small"></lightning-spinner>
+            </template>
+
+            <template if:false={isLoading}>
+                <!-- Alert Badges -->
+                <template if:true={showOverdueAlert}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_small" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <h2>
+                            <lightning-icon icon-name="utility:warning" alternative-text="Warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            Overdue Visit: {daysSinceLastVisit} days since last visit
+                        </h2>
+                    </div>
+                </template>
+
+                <template if:true={showPendingExceptionAlert}>
+                    <div class="slds-notify slds-notify_alert slds-alert_info slds-m-bottom_small" role="alert">
+                        <span class="slds-assistive-text">info</span>
+                        <h2>
+                            <lightning-icon icon-name="utility:info" alternative-text="Info" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            Pending exceptions under review
+                        </h2>
+                    </div>
+                </template>
+
+                <!-- Last Visit Summary -->
+                <template if:true={hasVisits}>
+                    <div class="slds-box slds-box_x-small slds-m-bottom_small">
+                        <div class="slds-grid slds-wrap slds-gutters_small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <p class="slds-text-heading_small slds-m-bottom_x-small">Last Visit</p>
+                                <p class="slds-text-body_regular slds-m-bottom_xx-small">
+                                    <lightning-formatted-date-time value={mostRecentVisit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
+                                    <span class="slds-text-color_weak"> ({daysSinceLastVisit} days ago)</span>
+                                </p>
+                                <template if:true={mostRecentVisit.riskLevel}>
+                                    <span class={riskLevelClass}>
+                                        Risk: {mostRecentVisit.riskLevel}
+                                    </span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Authorized Hours -->
+                    <div class="slds-box slds-box_x-small slds-m-bottom_small">
+                        <p class="slds-text-heading_small slds-m-bottom_x-small">
+                            Authorized Hours
+                            <span class="slds-text-body_regular slds-text-color_weak"> (Total: {totalHours})</span>
+                        </p>
+                        <template if:true={hasAuthorizedHours}>
+                            <ul class="slds-list_dotted">
+                                <template for:each={authorizedHours} for:item="hour">
+                                    <li key={hour.label}>
+                                        {hour.label}: <strong>{hour.value} hrs/week</strong>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                        <template if:false={hasAuthorizedHours}>
+                            <p class="slds-text-color_weak">No hours authorized</p>
+                        </template>
+                    </div>
+
+                    <!-- Recent Visits -->
+                    <p class="slds-text-heading_small slds-m-bottom_x-small">Recent Visits</p>
+                    <ul class="slds-has-dividers_bottom-space">
+                        <template for:each={visitHistory.recentVisits} for:item="visit">
+                            <li key={visit.id} class="slds-item">
+                                <article class="slds-tile slds-tile_board slds-cursor_pointer" data-id={visit.id} onclick={navigateToVisit}>
+                                    <div class="slds-tile__detail">
+                                        <p class="slds-truncate" title={visit.name}>
+                                            <strong>{visit.name}</strong>
+                                        </p>
+                                        <div class="slds-tile__detail">
+                                            <dl class="slds-list_horizontal slds-wrap">
+                                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Status">Status:</dt>
+                                                <dd class="slds-item_detail slds-truncate" title={visit.householdVisitStatus}>
+                                                    <span class="slds-badge">{visit.householdVisitStatus}</span>
+                                                </dd>
+                                                <dt class="slds-item_label slds-text-color_weak slds-truncate slds-m-left_small" title="Date">Date:</dt>
+                                                <dd class="slds-item_detail slds-truncate">
+                                                    <lightning-formatted-date-time value={visit.completedDate} year="numeric" month="short" day="numeric"></lightning-formatted-date-time>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </article>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:false={hasVisits}>
+                    <div class="slds-text-align_center slds-m-vertical_medium">
+                        <lightning-icon icon-name="utility:info" alternative-text="No visits" size="small" class="slds-m-bottom_small"></lightning-icon>
+                        <p class="slds-text-color_weak">No visits recorded for this household</p>
+                    </div>
+                </template>
+
+                <template if:true={error}>
+                    <div class="slds-text-color_error slds-m-top_small">
+                        Error loading visit history. Please refresh the page.
+                    </div>
+                </template>
+            </template>
+        </div>
+
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button label="Create Visit" onclick={handleCreateVisit} variant="brand"></lightning-button>
+                <lightning-button label="View All" onclick={handleViewAllVisits}></lightning-button>
+            </lightning-button-group>
+        </div>
+    </lightning-card>
+</template>
