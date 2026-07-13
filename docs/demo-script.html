@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IHSS Visit Management Demo Script</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 3px solid #0176d3;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #0176d3;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: #e3f3ff;
+            color: #0176d3;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        nav {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        nav h3 {
+            margin-bottom: 10px;
+            color: #0176d3;
+        }
+
+        nav a {
+            color: #0176d3;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #0176d3;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin: 25px 0 10px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin: 15px 0 8px;
+        }
+
+        .step {
+            background: #fafafa;
+            border-left: 4px solid #0176d3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #0176d3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step-title {
+            display: inline;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .step-content {
+            margin-top: 15px;
+            padding-left: 40px;
+        }
+
+        .action-label {
+            display: inline-block;
+            background: #fe9339;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #0176d3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: #014486;
+        }
+
+        .copy-btn:active {
+            background: #04844b;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .tip {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .path-indicator {
+            display: inline-block;
+            background: #e8f4fd;
+            border: 1px solid #0176d3;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #0176d3;
+            margin: 5px 0;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        strong {
+            color: #222;
+        }
+
+        a {
+            color: #0176d3;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .demo-url {
+            background: #e3f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .demo-url a {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>IHSS Visit Management Demo Script</h1>
+            <p class="subtitle">Complete walkthrough for Alameda County Social Services demo</p>
+            <div class="features">
+                <span class="badge">Desktop + Mobile Flow</span>
+                <span class="badge">Agentforce Integration</span>
+                <span class="badge">Visit Documentation</span>
+                <span class="badge">Benefits Eligibility</span>
+            </div>
+        </header>
+
+        <nav>
+            <h3>Quick Navigation</h3>
+            <a href="#setup">Setup</a>
+            <a href="#home">1. Home Page</a>
+            <a href="#desktop-visit">2. Desktop Visit</a>
+            <a href="#mobile">3. Mobile Experience</a>
+            <a href="#parse">4. Parse & Generate</a>
+            <a href="#finalize">5. Finalize Visit</a>
+            <a href="#agent">6. Employee Agent</a>
+        </nav>
+
+        <div class="demo-url">
+            <strong>Sample Dictation:</strong><br>
+            <a href="https://mdevsales.github.io/ihss-agent-demo/" target="_blank">https://mdevsales.github.io/ihss-agent-demo/ ↗</a>
+        </div>
+
+        <!-- SETUP SECTION -->
+        <div id="setup" class="section">
+            <h2>Before You Start</h2>
+            <ol>
+                <li><strong>Open the org:</strong> Have your Salesforce org loaded and ready</li>
+                <li><strong>Find a household:</strong> Navigate to a Person Account (e.g., Henry Miller)</li>
+                <li><strong>Identify a visit:</strong> Have a Visit record in "Scheduled" status ready</li>
+                <li><strong>Mobile device:</strong> Have Salesforce Mobile app installed and logged in</li>
+                <li><strong>Demo dictation ready:</strong> Keep <a href="https://mdevsales.github.io/ihss-agent-demo/" target="_blank">this page</a> open in a tab</li>
+            </ol>
+        </div>
+
+        <!-- STEP 1: HOME PAGE -->
+        <div id="home" class="section">
+            <h2>Step 1: Home Page Experience</h2>
+
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Navigate to Home</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click on "Home" from the app launcher or navigation</p>
+                    <p><strong>Show:</strong> Point out the <strong>My Day Component</strong></p>
+                    <ul>
+                        <li>Today's scheduled visits</li>
+                        <li>Status summary (Scheduled, In Progress, Pending)</li>
+                        <li>Quick actions: Start Visit, Get Directions</li>
+                    </ul>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "This is my worker's personalized dashboard. I can see all my visits for today, their priority, and quickly navigate to households that need attention."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: DESKTOP VISIT -->
+        <div id="desktop-visit" class="section">
+            <h2>Step 2: Visit Record (Desktop)</h2>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Open a Visit Record</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click on a visit from My Day or navigate to a Visit record</p>
+                    <p><strong>Show on desktop:</strong></p>
+                    <ul>
+                        <li><strong>Path:</strong> Current status should be "Scheduled"</li>
+                        <li><strong>Household Profile Card:</strong> Shows last visit date, risk level, authorized hours</li>
+                        <li><strong>Visit fields:</strong> Planned time, address, visitor</li>
+                        <li><strong>Benefits eligibility section:</strong> Empty rankings fields</li>
+                    </ul>
+                    <div class="note">
+                        <strong>Path Status:</strong> <span class="path-indicator">Scheduled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: MOBILE EXPERIENCE -->
+        <div id="mobile" class="section">
+            <h2>Step 3: Mobile Experience - Field Visit</h2>
+
+            <div class="step">
+                <span class="step-number">3A</span>
+                <span class="step-title">Open Visit on Mobile</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Open Salesforce Mobile app and navigate to the same Visit</p>
+                    <p><strong>Show:</strong> Mobile-optimized view of the visit record</p>
+                    <div class="tip">
+                        <strong>Scenario:</strong> "I'm now at the household conducting the visit. I need to document my observations in real-time."
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3B</span>
+                <span class="step-title">Update Path to "Visit In Progress"</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click the Path and select <strong>"Visit In Progress"</strong></p>
+                    <p><strong>Why:</strong> Shows that the worker has started the visit</p>
+                    <div class="note">
+                        <strong>Path Status:</strong> <span class="path-indicator">Visit In Progress</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3C</span>
+                <span class="step-title">Add Visit Notes (Dictation)</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Scroll to <strong>Visit Notes Dictation</strong> field</p>
+                    <p><strong>Demo:</strong> Use voice-to-text or type example notes:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'Client is ambulatory but requires assistance with meal preparation due to arthritis in hands. Home is clean and safe. Client expressed satisfaction with current care plan.')">Copy</button>
+                        <pre>Client is ambulatory but requires assistance with meal preparation due to arthritis in hands. Home is clean and safe. Client expressed satisfaction with current care plan.</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3D</span>
+                <span class="step-title">Demo Handwritten Note Scanner</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click <strong>"Scan Handwritten Visit Notes"</strong> quick action</p>
+                    <p><strong>Show:</strong></p>
+                    <ul>
+                        <li>Camera interface opens</li>
+                        <li>Point at handwritten notes (or use sample image)</li>
+                        <li>AI transcribes handwriting to text</li>
+                        <li>Transcribed text populates the Visit Notes field</li>
+                    </ul>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "For workers who prefer pen and paper, they can simply photograph their handwritten notes and our AI will transcribe them automatically."
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3E</span>
+                <span class="step-title">Save the Visit</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Tap <strong>Save</strong></p>
+                    <p><strong>Result:</strong> Visit notes are captured, ready for processing when back at the desk</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: PARSE & GENERATE -->
+        <div id="parse" class="section">
+            <h2>Step 4: Back to Desktop - Parse & Generate</h2>
+
+            <div class="step">
+                <span class="step-number">4A</span>
+                <span class="step-title">Return to Desktop View</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Switch back to desktop browser with the Visit record open</p>
+                    <p><strong>Show:</strong> Visit notes are now populated from mobile entry</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4B</span>
+                <span class="step-title">Update Path to "Documentation Pending"</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Update Path to <strong>"Documentation Pending"</strong></p>
+                    <p><strong>Why:</strong> Visit is complete, now processing documentation</p>
+                    <div class="note">
+                        <strong>Path Status:</strong> <span class="path-indicator">Documentation Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4C</span>
+                <span class="step-title">Paste Full Demo Dictation</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Go to <a href="https://mdevsales.github.io/ihss-agent-demo/" target="_blank">demo dictation page ↗</a></p>
+                    <p><strong>Copy:</strong> The full sample dictation text</p>
+                    <p><strong>Paste:</strong> Into the <strong>Visit Notes Dictation</strong> field (replacing or appending to existing notes)</p>
+                    <p><strong>Save:</strong> Click Save</p>
+                    <div class="tip">
+                        <strong>Why this step:</strong> This gives us rich, realistic visit documentation to parse and generate rankings from.
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4D</span>
+                <span class="step-title">Parse Text</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click <strong>"Parse Visit Notes"</strong> quick action</p>
+                    <p><strong>Show:</strong></p>
+                    <ul>
+                        <li>AI extracts structured data from unstructured notes</li>
+                        <li>Populates Meal Preparation, Ambulation, Domestic Services evidence fields</li>
+                        <li>Populates rationale for each category</li>
+                    </ul>
+                    <p><strong>Result:</strong> Structured fields are now populated, ready for ranking generation</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4E</span>
+                <span class="step-title">Generate Benefits Eligibility</span>
+                <div class="step-content">
+                    <span class="action-label">Agentforce Action</span>
+                    <p><strong>Action:</strong> Click <strong>"Generate Benefits Eligibility"</strong> quick action</p>
+                    <p><strong>Show:</strong></p>
+                    <ul>
+                        <li>AI analyzes evidence and rationale</li>
+                        <li>Generates proposed rankings (1-5 scale)</li>
+                        <li>Calculates proposed hours based on IHSS guidelines</li>
+                        <li>Flags exceptions if hours exceed thresholds</li>
+                    </ul>
+                    <p><strong>Fields populated:</strong></p>
+                    <ul>
+                        <li>Meal Preparation Proposed Ranking & Hours</li>
+                        <li>Ambulation Proposed Ranking & Hours</li>
+                        <li>Domestic Services Proposed Ranking & Hours</li>
+                        <li>Exception flags (if applicable)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 5: IHSS AGENT QUESTION -->
+        <div id="agent" class="section">
+            <h2>Step 5: Ask IHSS Employee Agent</h2>
+
+            <div class="step">
+                <span class="step-number">5A</span>
+                <span class="step-title">Open Agent Panel</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Click the <strong>Agentforce icon</strong> in the utility bar (or Einstein icon)</p>
+                    <p><strong>Show:</strong> IHSS Employee Agent chat panel opens</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">5B</span>
+                <span class="step-title">Verify Exception Threshold</span>
+                <div class="step-content">
+                    <span class="action-label">Agent Query</span>
+                    <p><strong>Scenario:</strong> "I see an exception flag on meal preparation. Let me verify the threshold."</p>
+                    <p><strong>Ask the agent:</strong></p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'What is the exception threshold for meal preparation hours?')">Copy</button>
+                        <pre>What is the exception threshold for meal preparation hours?</pre>
+                    </div>
+                    <p><strong>Expected Response:</strong> Agent cites IHSS policy documentation showing the exact threshold (e.g., 12.5 hours/week)</p>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "The agent has access to the complete IHSS policy library and can instantly cite regulations, so workers don't have to memorize complex rules."
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">5C</span>
+                <span class="step-title">Review and Adjust Rankings</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Review the proposed rankings</p>
+                    <p><strong>Adjust if needed:</strong> Update any rankings manually based on professional judgment</p>
+                    <p><strong>Update:</strong> Change proposed rankings to <strong>approved rankings</strong></p>
+                    <ul>
+                        <li>Meal Preparation Approved Ranking: <strong>Rank 3</strong></li>
+                        <li>Ambulation Approved Ranking: <strong>Rank 2</strong></li>
+                        <li>Domestic Services Approved Ranking: <strong>Rank 4</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 6: FINALIZE -->
+        <div id="finalize" class="section">
+            <h2>Step 6: Generate Narrative & Finalize</h2>
+
+            <div class="step">
+                <span class="step-number">6A</span>
+                <span class="step-title">Generate Draft Narrative</span>
+                <div class="step-content">
+                    <span class="action-label">Agentforce Action</span>
+                    <p><strong>Action:</strong> Click <strong>"Generate Draft Narrative"</strong> quick action</p>
+                    <p><strong>Show:</strong></p>
+                    <ul>
+                        <li>AI synthesizes all visit data into professional narrative</li>
+                        <li>Includes rankings, hours, observations, and rationale</li>
+                        <li>Formats as compliant IHSS documentation</li>
+                    </ul>
+                    <p><strong>Result:</strong> Draft Narrative field is populated with formatted HTML narrative</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">6B</span>
+                <span class="step-title">Review Draft Narrative</span>
+                <div class="step-content">
+                    <p><strong>Action:</strong> Scroll to <strong>Draft Narrative</strong> field</p>
+                    <p><strong>Show:</strong> Formatted narrative with:</p>
+                    <ul>
+                        <li>Visit summary</li>
+                        <li>Service category assessments</li>
+                        <li>Approved rankings and justifications</li>
+                        <li>Worker attestation section</li>
+                    </ul>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "What used to take 45 minutes of typing is now generated in seconds, and the worker just needs to review and approve."
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">6C</span>
+                <span class="step-title">Approve and Finalize Visit</span>
+                <div class="step-content">
+                    <span class="action-label">Screen Flow</span>
+                    <p><strong>Action:</strong> Click <strong>"Approve and Finalize Visit"</strong> quick action</p>
+                    <p><strong>Screen 1 - Review and Attest:</strong></p>
+                    <ul>
+                        <li>Shows approved rankings summary</li>
+                        <li>Displays draft narrative preview</li>
+                        <li>Requires worker attestation checkbox: "I attest that this visit was conducted and documented accurately"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">6D</span>
+                <span class="step-title">Input Risk Assessment</span>
+                <div class="step-content">
+                    <p><strong>Screen 2 - Risk and Priority:</strong></p>
+                    <p><strong>Input:</strong></p>
+                    <ul>
+                        <li><strong>Overall Risk Level:</strong> Select <span class="highlight">Medium</span></li>
+                        <li><strong>Highest Need Category:</strong> Select <span class="highlight">Meal Preparation</span></li>
+                    </ul>
+                    <p><strong>Click:</strong> <strong>Finalize Visit</strong></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">6E</span>
+                <span class="step-title">Confirm Submission</span>
+                <div class="step-content">
+                    <p><strong>Result:</strong></p>
+                    <ul>
+                        <li>Visit status updates to <span class="path-indicator">Under Review</span></li>
+                        <li>Narrative Status: <strong>Submitted</strong></li>
+                        <li>Report Status: <strong>Submitted</strong></li>
+                        <li>Worker Approval Date: <strong>Today's date</strong></li>
+                        <li>Final Narrative locked</li>
+                    </ul>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "The visit is now in the supervisor's queue for review. The system automatically updated the household's Last Visit Date and all audit fields."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 7: POST-SUBMISSION AGENT QUERIES -->
+        <div id="post-submission" class="section">
+            <h2>Step 7: Employee Agent - Workload Management</h2>
+
+            <div class="step">
+                <span class="step-number">7A</span>
+                <span class="step-title">Check Backlog</span>
+                <div class="step-content">
+                    <span class="action-label">Agent Query</span>
+                    <p><strong>Scenario:</strong> "Now that this visit is submitted, let me check what else needs my attention."</p>
+                    <p><strong>Ask the agent:</strong></p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'Show me my backlog')">Copy</button>
+                        <pre>Show me my backlog</pre>
+                    </div>
+                    <p><strong>Expected Response:</strong> Agent queries visits assigned to user and shows:</p>
+                    <ul>
+                        <li>Visits in "Documentation Pending" status</li>
+                        <li>Overdue visits (>90 days)</li>
+                        <li>Visits with exceptions under review</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">7B</span>
+                <span class="step-title">Find Incomplete Visits</span>
+                <div class="step-content">
+                    <span class="action-label">Agent Query</span>
+                    <p><strong>Ask the agent:</strong></p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'Which visits are missing rankings?')">Copy</button>
+                        <pre>Which visits are missing rankings?</pre>
+                    </div>
+                    <p><strong>Expected Response:</strong> Agent identifies visits where approved rankings are null</p>
+                    <ul>
+                        <li>Lists visit numbers and households</li>
+                        <li>Provides direct links to each visit</li>
+                        <li>Shows how many fields are incomplete per visit</li>
+                    </ul>
+                    <div class="tip">
+                        <strong>Talking Point:</strong> "The agent helps workers prioritize their workload and ensures no visits fall through the cracks."
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">7C</span>
+                <span class="step-title">Policy Questions</span>
+                <div class="step-content">
+                    <span class="action-label">Additional Queries</span>
+                    <p><strong>Other questions you can demo:</strong></p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'What documentation is required for domestic services over 20 hours?')">Copy</button>
+                        <pre>What documentation is required for domestic services over 20 hours?</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'Show me households with high risk levels')">Copy</button>
+                        <pre>Show me households with high risk levels</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'What is the appeal process for denied benefits?')">Copy</button>
+                        <pre>What is the appeal process for denied benefits?</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECAP SECTION -->
+        <div id="recap" class="section">
+            <h2>Demo Recap & Key Messages</h2>
+
+            <h3>What You've Shown</h3>
+            <ol>
+                <li><strong>Personalized Home Page:</strong> My Day Component with today's scheduled visits</li>
+                <li><strong>Desktop Visit Management:</strong> Comprehensive visit record with Household Profile Card</li>
+                <li><strong>Mobile Field Experience:</strong> Real-time note capture and handwritten note scanning</li>
+                <li><strong>AI-Powered Parsing:</strong> Unstructured text → structured data</li>
+                <li><strong>Automated Benefits Calculation:</strong> Rankings and hours with exception detection</li>
+                <li><strong>Intelligent Agent Support:</strong> Policy questions answered instantly with citations</li>
+                <li><strong>Narrative Generation:</strong> Professional documentation in seconds</li>
+                <li><strong>Streamlined Approval:</strong> Screen flow with attestation and risk assessment</li>
+                <li><strong>Workload Intelligence:</strong> Agent helps prioritize and track incomplete work</li>
+            </ol>
+
+            <h3>Value Propositions</h3>
+            <ul>
+                <li><strong>Time Savings:</strong> 45-minute documentation → 5 minutes</li>
+                <li><strong>Accuracy:</strong> AI ensures IHSS compliance and catches exceptions</li>
+                <li><strong>Consistency:</strong> Standardized narratives across all workers</li>
+                <li><strong>Worker Empowerment:</strong> Instant policy guidance without memorization</li>
+                <li><strong>Supervisor Efficiency:</strong> Clean, complete documentation for faster reviews</li>
+                <li><strong>Audit Trail:</strong> Complete record of decisions with AI-generated justifications</li>
+            </ul>
+
+            <div class="tip">
+                <strong>Closing Statement:</strong> "This end-to-end solution transforms IHSS visit management from a paper-intensive, manual process into an intelligent, mobile-first workflow that empowers workers and ensures compliance—all built natively on Salesforce."
+            </div>
+        </div>
+
+        <!-- TROUBLESHOOTING -->
+        <div id="troubleshooting" class="section">
+            <h2>Troubleshooting</h2>
+
+            <h4>Q: Handwritten note scanner isn't working</h4>
+            <p><strong>A:</strong> Ensure you've granted camera permissions to Salesforce Mobile. If unavailable, skip this step and focus on voice dictation.</p>
+
+            <h4>Q: Agent isn't responding or gives generic answers</h4>
+            <p><strong>A:</strong> Check that the agent has access to the IHSS policy data library. Try rephrasing questions to be more specific.</p>
+
+            <h4>Q: Benefits eligibility quick action fails</h4>
+            <p><strong>A:</strong> Verify that evidence and rationale fields are populated from the Parse Text step. Agent needs structured input.</p>
+
+            <h4>Q: Path isn't updating</h4>
+            <p><strong>A:</strong> Make sure you're clicking the Path component at the top of the record, not just changing status fields manually.</p>
+
+            <h4>Q: Draft narrative shows HTML tags</h4>
+            <p><strong>A:</strong> This is expected in edit mode. The Approve & Finalize flow displays it properly formatted.</p>
+        </div>
+
+    </div>
+
+    <script>
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#04844b';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#0176d3';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+    </script>
+</body>
+</html>
