@@ -26,7 +26,7 @@ public with sharing class MyDayController {
                 WHERE VisitorId = :userId
                   AND Status = 'Planned'
                   AND Household_Visit_Status__c IN ('Scheduled', 'Visit In Progress', 'Documentation Pending')
-                  AND DAY_ONLY(CreatedDate) = TODAY
+                  AND DAY_ONLY(PlannedVisitStartTime) = TODAY
                 ORDER BY PlannedVisitStartTime ASC NULLS LAST, CreatedDate ASC
             ];
 
